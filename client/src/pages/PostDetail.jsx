@@ -5,7 +5,7 @@ import Loader from "../components/Loader";
 import DeletePost from "./DeletePost";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { UserContext } from "../context/userContext";
+import { UserContext } from "../context/UserContext";
 
 const PostDetail = () => {
   const { id } = useParams();

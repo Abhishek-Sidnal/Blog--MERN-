@@ -18,7 +18,7 @@ import Dashboard from './pages/Dashboard'
 import EditPost from './pages/EditPost'
 import Logout from './pages/Logout'
 import { Toaster } from 'react-hot-toast';
-import UserProvider from './context/userContext'
+import UserProvider from './context/UserContext'
 
 const router = createBrowserRouter([
   {
@@ -48,5 +48,4 @@ root.render(
     <RouterProvider router={router} />
     <Toaster />
   </React.StrictMode>
-
 );

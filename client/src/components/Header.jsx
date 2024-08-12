@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaBlog, FaTimes } from "react-icons/fa";
-import { UserContext } from "../context/userContext";
+import { UserContext } from "../context/UserContext";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
