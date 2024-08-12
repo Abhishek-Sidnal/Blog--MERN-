@@ -4,7 +4,7 @@ export const DUMMY_POSTS = [
     {
         id: "1",
         thumbnail: Thumbnail,
-        category: "education",
+        category: "education ",
         title: "Learning JavaScript",
         desc: "An introduction to JavaScript programming.",
         authorID: 1,
