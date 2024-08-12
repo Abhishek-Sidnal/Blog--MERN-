@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from "react";
-import Avatar1 from "../Images/avatar1.jpg";
-import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
-import axios from "axios";
-import Loader from "../components/Loader";
+import { Link } from "react-router-dom"; // For navigation
+import toast from "react-hot-toast"; // For error notifications
+import axios from "axios"; // For making HTTP requests
+import Loader from "../components/Loader"; // Loading spinner component
 
 const Authors = () => {
-  const [authors, setAuthors] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [authors, setAuthors] = useState([]); // State to store authors
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
 
   useEffect(() => {
     const getAuthors = async () => {
-      setIsLoading(true);
+      setIsLoading(true); // Start loading
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/users/`
+          `${process.env.REACT_APP_BASE_URL}/users/` // Fetch authors from API
         );
-        setAuthors(response.data);
+        setAuthors(response.data); // Store authors in state
       } catch (err) {
-        toast.error(err);
+        toast.error(err.message); // Show error notification
       }
-      setIsLoading(false);
+      setIsLoading(false); // Stop loading
     };
     getAuthors();
-  }, []);
-if(isLoading){
-  return <Loader/>
-}
+  }, []); // Fetch authors only once when the component mounts
+
+  if (isLoading) {
+    return <Loader />; // Show loading spinner if data is being fetched
+  }
+
   return (
     <section className="bg-background text-primary-text py-8 w-full">
       <div className="container mx-auto px-4">
@@ -36,7 +37,7 @@ if(isLoading){
               <Link
                 key={id}
                 to={`/posts/users/${id}`}
-                className="bg-secondary-bg p-4 rounded-lg flex items-center space-x-4 hover:bg-background transition duration-300"
+                className="bg-glass p-4 rounded-lg flex items-center space-x-4 hover:bg-secondary-text transition duration-300"
               >
                 <img
                   src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${avatar}`}
@@ -52,7 +53,7 @@ if(isLoading){
           </div>
         ) : (
           <div className="text-center">
-            <h2 className="text-2xl">No Authors</h2>
+            <h2 className="text-2xl text-primary-text">No Authors</h2>
           </div>
         )}
       </div>

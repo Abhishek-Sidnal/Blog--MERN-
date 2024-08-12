@@ -29,7 +29,7 @@ const Posts = () => {
   }
 
   return (
-    <section className="p-6 bg-gray-100 min-h-screen">
+    <section className="p-6 bg-white bg-opacity-80 backdrop-blur-lg min-h-screen w-full ">
       <div className="container mx-auto">
         {posts.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -58,7 +58,7 @@ const Posts = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <h2 className="text-lg font-semibold text-gray-700">
+            <h2 className="text-lg font-semibold text-gray-800">
               No Posts Available at this moment
             </h2>
           </div>

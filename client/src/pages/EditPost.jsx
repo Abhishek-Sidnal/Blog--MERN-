@@ -70,7 +70,7 @@ const EditPost = () => {
           `${process.env.REACT_APP_BASE_URL}/posts/${id}`
         );
         setTitle(response.data.title);
-        setCategory(response.data.category); // Add this line to set the category from the response
+        setCategory(response.data.category);
         setDescription(response.data.description);
       } catch (err) {
         toast.error("Failed to fetch the post.");
@@ -103,12 +103,12 @@ const EditPost = () => {
   };
 
   return (
-    <section className="w-1/2 mx-auto mt-10">
-      <div className="flex flex-col gap-4">
-        <h2 className="font-bold text-xl">Edit post</h2>
-        <form className="flex flex-col gap-4" onSubmit={editPost}>
+    <section className="w-full max-w-3xl mx-auto mt-10 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
+      <div className="flex flex-col gap-6">
+        <h2 className="text-2xl font-bold text-accent">Edit Post</h2>
+        <form className="flex flex-col gap-6" onSubmit={editPost}>
           <input
-            className="px-3 py-2 outline-none rounded-lg"
+            className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             type="text"
             placeholder="Title"
             value={title}
@@ -116,16 +116,18 @@ const EditPost = () => {
             autoFocus
           />
           <select
-            className="px-3 py-2 outline-none rounded-lg"
+            className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
             {POST_CATEGORIES.map((cat) => (
-              <option key={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
           <ReactQuill
-            className="bg-white h-40 overflow-scroll"
+            className="bg-secondary-text h-64 overflow-auto border border-secondary-text rounded-lg focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             modules={modules}
             formats={formats}
             value={description}
@@ -133,14 +135,15 @@ const EditPost = () => {
           />
           <input
             type="file"
+            className="border border-secondary-text px-4 py-2 rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             onChange={(e) => setThumbnail(e.target.files[0])}
-            accept="jpg, png, jpeg"
+            accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className="px-3 py-2 bg-blue-700 rounded-lg text-white w-1/3 self-center"
+            className="px-6 py-2 bg-accent text-primary-text rounded-lg w-full sm:w-auto self-center hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             type="submit"
           >
-            Update post
+            Update Post
           </button>
         </form>
       </div>

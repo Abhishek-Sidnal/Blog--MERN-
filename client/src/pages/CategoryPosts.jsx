@@ -1,37 +1,38 @@
 import React, { useEffect, useState } from "react";
-import PostItem from "../components/PostItem";
-import toast from "react-hot-toast";
-import axios from "axios";
-import Loader from "../components/Loader";
-import { useParams } from "react-router-dom";
+import PostItem from "../components/PostItem"; // Component for rendering individual post items
+import toast from "react-hot-toast"; // For displaying error messages
+import axios from "axios"; // For making HTTP requests
+import Loader from "../components/Loader"; // Loading spinner component
+import { useParams } from "react-router-dom"; // For accessing URL parameters
 
 const CategoryPosts = () => {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [posts, setPosts] = useState([]); // State to store posts
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
 
-  const { category } = useParams();
+  const { category } = useParams(); // Get category from URL params
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setIsLoading(true);
+      setIsLoading(true); // Start loading
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/posts/categories/${category}`
+          `${process.env.REACT_APP_BASE_URL}/posts/categories/${category}` // Fetch posts by category
         );
-        setPosts(response?.data);
+        setPosts(response?.data); // Store posts in state
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response.data.message); // Show error notification
       }
-      setIsLoading(false);
+      setIsLoading(false); // Stop loading
     };
     fetchPosts();
-  }, [category]);
+  }, [category]); // Re-fetch posts when category changes
+
   if (isLoading) {
-    return <Loader />;
+    return <Loader />; // Show loading spinner if data is being fetched
   }
 
   return (
-    <section className=" text-primary-text py-8 w-full">
+    <section className="bg-background text-primary-text py-8 w-full">
       <div className="container mx-auto px-4">
         {posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -60,7 +61,7 @@ const CategoryPosts = () => {
           </div>
         ) : (
           <div className="text-center py-8">
-            <h2 className="text-xl sm:text-2xl font-semibold">
+            <h2 className="text-xl sm:text-2xl font-semibold text-primary-text">
               No Posts Available at this moment
             </h2>
           </div>

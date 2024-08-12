@@ -22,7 +22,7 @@ const PostAuthor = ({ authorID, createdAt }) => {
         );
         setAuthor(response?.data);
       } catch (error) {
-        toast.error(error);
+        toast.error(error.message);
       }
     };
     getAuthor();
@@ -31,15 +31,15 @@ const PostAuthor = ({ authorID, createdAt }) => {
   return (
     <Link
       to={`/posts/users/${authorID}`}
-      className="flex items-center space-x-3 hover:opacity-75 transition-opacity"
+      className="flex items-center space-x-2 hover:opacity-75 transition-opacity"
     >
       <img
         src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${author?.avatar}`}
-        alt="Author"
-        className="w-12 h-12 rounded-full object-cover"
+        alt={author?.name}
+        className="w-10 h-10 rounded-full object-cover"
       />
       <div className="text-sm">
-        <h5 className="font-semibold text-gray-800">By: {author.name}</h5>
+        <h5 className="font-semibold text-gray-800">{author.name}</h5>
         <small className="text-gray-500">
           <ReactTimeAgo date={new Date(createdAt)} locale="en-IN" />
         </small>

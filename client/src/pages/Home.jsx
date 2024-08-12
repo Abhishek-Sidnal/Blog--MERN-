@@ -1,13 +1,8 @@
-import React from 'react'
-import Posts from '../components/Posts'
+import React from "react";
+import Posts from "../components/Posts";
 
 const Home = () => {
-  return (
-    <div className="flex-1">
+  return <Posts />;
+};
 
-    <Posts/>
-    </div>
-  )
-}
-
-export default Home
+export default Home;

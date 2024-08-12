@@ -56,7 +56,7 @@ const Dashboard = () => {
         </header>
 
         {posts.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {posts.map((post) => (
               <article
                 key={post._id}
@@ -74,22 +74,17 @@ const Dashboard = () => {
                   <div className="flex justify-center space-x-4">
                     <Link
                       to={`/posts/${post._id}`}
-                      className="text-accent hover:text-primary-text transition duration-300"
+                      className="flex items-center justify-center px-4 py-1 text-base text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 rounded-lg shadow-md transition"
                     >
                       View
                     </Link>
                     <Link
                       to={`/posts/${post._id}/edit`}
-                      className="text-accent hover:text-primary-text transition duration-300"
+                      className="flex items-center justify-center px-4 py-1 text-base text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg shadow-md transition"
                     >
                       Edit
                     </Link>
-                    <Link
-                      to={`/posts/${post._id}/delete`}
-                      className="text-accent hover:text-primary-text transition duration-300"
-                    >
                       <DeletePost postId={post._id} />
-                    </Link>
                   </div>
                 </div>
               </article>

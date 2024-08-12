@@ -6,6 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
+
 const UserProfile = () => {
   const [avatar, setAvatar] = useState("");
   const [name, setName] = useState("");
@@ -76,7 +77,7 @@ const UserProfile = () => {
   };
 
   return (
-    <section className="w-full max-w-md mt-8 p-4 mx-auto bg-white rounded-xl shadow-md">
+    <section className="w-full max-w-lg my-8 p-4 mx-auto bg-white rounded-xl shadow-md">
       <div className="flex flex-col items-center space-y-4">
         <Link
           to={`/myposts/${currentUser?.id}`}

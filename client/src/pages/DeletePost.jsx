@@ -28,8 +28,8 @@ const DeletePost = ({ postId }) => {
       );
       if (response.status === 200) {
         toast.success("Post deleted successfully");
-        if (location.pathname === `/myposts/${currentUser.id}`) {
-          navigate(0);
+        if (location.pathname.startsWith(`/myposts`)) {
+          navigate(0); // Refresh the current page
         } else {
           navigate("/");
         }
@@ -50,7 +50,7 @@ const DeletePost = ({ postId }) => {
   return (
     <Link
       onClick={() => removePost(postId)}
-      className="bg-primary-text text-background px-4 py-2 rounded-lg hover:bg-accent transition duration-300"
+      className="flex items-center justify-center px-4 py-1 text-base text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 rounded-lg"
     >
       Delete
     </Link>
