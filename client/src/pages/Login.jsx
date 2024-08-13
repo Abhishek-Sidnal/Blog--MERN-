@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { UserContext } from "../context/userContext";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const [userData, setUserData] = useState({
@@ -12,6 +13,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { setCurrentUser } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
 
   const changeInputHandler = (e) => {
     setUserData((prevState) => ({
@@ -40,7 +42,9 @@ const Login = () => {
       setIsLoading(false); // Start loading
     }
   };
-
+  if (isLoading) {
+    return <Loader />; // Show loading spinner if data is being fetched
+  }
   return (
     <section className="bg-background text-primary-text min-h-screen flex items-center justify-center p-6">
       <div className="bg-secondary-bg p-8 rounded-lg shadow-lg max-w-md w-full">
