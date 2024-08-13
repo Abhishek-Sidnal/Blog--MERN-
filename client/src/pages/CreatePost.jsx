@@ -91,7 +91,7 @@ const CreatePost = () => {
   };
 
   return (
-    <section className="w-full max-w-3xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
+    <section className="w-full max-w-3xl mx-auto my-8 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
       <div className="flex flex-col gap-6">
         <h2 className="font-bold text-2xl sm:text-3xl">Create Post</h2>
 
