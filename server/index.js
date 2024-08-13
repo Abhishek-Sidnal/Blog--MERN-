@@ -11,7 +11,7 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const app = express();
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: "https://my-blogs-mern.netlify.app" }));
+app.use(cors({ credentials: true, origin: "https://frontend-75cg.onrender.com" }));
 app.use(upload())
 app.use('/uploads', express.static(__dirname + '/uploads'))
 
