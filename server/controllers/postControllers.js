@@ -17,7 +17,7 @@ const createPost = async (req, res, next) => {
             return next(new HttpError("Fill in all fields and choose thumbnail.", 422));
         }
 
-        const thumbnailLocalPath = req.file.path;
+        const thumbnailLocalPath = req.file?.path;
         if (!thumbnailLocalPath) {
             return next(new HttpError("Thumbnail is required", 422));
         }
