@@ -158,53 +158,28 @@ const editPost = async (req, res, next) => {
 
 // ==========================Delete Posts
 // delete :api/posts/users/:id
+
 const deletePost = async (req, res, next) => {
     try {
-        const postId = req.params.id; // Correctly accessing postId from params
-        if (!postId) {
-            return next(new HttpError("Post unavailable.", 400));
-        }
-
-        const post = await Post.findById(postId);
-        if (!post) {
-            return next(new HttpError("Post not found.", 404));
-        }
-
-        const fileName = post.thumbnail;
-
-        // Delete thumbnail from uploads folder if exists
-        if (fileName) {
-            fs.unlink(path.join(__dirname, '..', 'uploads', fileName), async (err) => {
-                if (err) {
-                    return next(new HttpError("Error deleting file from server.", 500));
-                }
-
-                // Delete the post from the database
-                await Post.findByIdAndDelete(postId);
-
-                // Reduce the post count of the user
-                const currentUser = await User.findById(req.user.id);
-                if (currentUser) {
-                    const userPostCount = currentUser.posts - 1;
-                    await User.findByIdAndUpdate(req.user.id, { posts: userPostCount });
-                }
-
-                // Send response after everything is done
-                res.json({ message: `Post ${postId} deleted successfully.` });
-            });
-        } else {
-            // If no thumbnail, just delete the post and update user post count
-            await Post.findByIdAndDelete(postId);
-            const currentUser = await User.findById(req.user.id);
-            if (currentUser) {
-                const userPostCount = currentUser.posts - 1;
-                await User.findByIdAndUpdate(req.user.id, { posts: userPostCount });
-            }
-            res.json({ message: `Post ${postId} deleted successfully.` });
-        }
+      const postId = req.params.id;
+      const post = await Post.findById(postId);
+  
+      if (!post) {
+        return next(new HttpError("Post not found.", 404));
+      }
+  
+      if (post.creator.toString() !== req.user.id) {
+        return next(new HttpError("You are not authorized to delete this post.", 403));
+      }
+  
+      await Post.findByIdAndRemove(postId);
+  
+      res.status(200).json({ message: "Post deleted successfully." });
     } catch (error) {
-        return next(new HttpError("An error occurred while deleting the post.", 500));
+      console.error("Error deleting post:", error);
+      return next(new HttpError("Failed to delete the post. Please try again.", 500));
     }
-};
+  };
+  
 
 module.exports = { createPost, getPosts, getPost, getCatPosts, getUserPosts, editPost, deletePost };
