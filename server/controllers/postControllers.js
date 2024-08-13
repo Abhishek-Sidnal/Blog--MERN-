@@ -5,7 +5,7 @@ const { v4: uuid } = require('uuid');
 const HttpError = require("../models/errorModel");
 const fs = require('fs');
 const { title } = require("process");
-const { uploadOnCloudinary } = require('../utils/cloudinary')
+
 
 // ==========================CREATE A Post
 // Post :api/posts
@@ -43,7 +43,6 @@ const createPost = async (req, res, next) => {
         return next(new HttpError(error.message, 500));
     }
 };
-
 
 
 
