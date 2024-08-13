@@ -27,7 +27,7 @@ const PostItem = ({
     <article className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow">
       <Link to={`/posts/${postID}`}>
         <img
-          src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${thumbnail}`}
+          src={thumbnail}
           alt={title}
           className="w-full h-48 object-cover rounded-t-lg"
         />

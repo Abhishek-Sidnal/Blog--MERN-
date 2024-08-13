@@ -56,7 +56,7 @@ const PostDetail = () => {
 
           <div className="mb-6 mt-4 ">
             <img
-              src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`}
+              src={thumbnail}
               alt="Post Thumbnail"
               className="w-full h-auto object-cover rounded-lg shadow-md"
             />
