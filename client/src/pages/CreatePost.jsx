@@ -129,7 +129,7 @@ const CreatePost = () => {
             accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className="px-6 py-2 bg-accent text-primary-text rounded-lg w-full sm:w-auto self-center hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
+            className="px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold  self-center"
             type="submit"
           >
             Create Post
