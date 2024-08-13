@@ -65,25 +65,38 @@ const CreatePost = () => {
 
   const createPost = async (e) => {
     e.preventDefault();
+
     const postData = new FormData();
-    postData.set("title", title);
-    postData.set("category", category);
-    postData.set("description", description);
-    postData.set("thumbnail", thumbnail);
+    postData.append("title", title);
+    postData.append("category", category);
+    postData.append("description", description);
+    postData.append("thumbnail", thumbnail);
+
+    // Log FormData for debugging
+    for (let pair of postData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/posts`,
         postData,
-        { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+
       if (response.status === 201) {
-        toast.success(`${title} posted succfull.`);
-        return navigate("/");
+        toast.success(`${title} posted successfully.`);
+        navigate("/");
       }
     } catch (err) {
-      console.error("Error creating post:", err, err.response.data.message);
-      toast.error(err.response.data.message);
+      console.error("Error creating post:", err);
+      toast.error(err.response?.data?.message || "An error occurred");
     }
   };
 
@@ -95,7 +108,7 @@ const CreatePost = () => {
         <form
           className="flex flex-col gap-6"
           onSubmit={createPost}
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
         >
           <input
             className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
