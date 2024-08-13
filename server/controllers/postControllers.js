@@ -11,38 +11,38 @@ const { uploadOnCloudinary } = require('../utils/cloudinary')
 // Post :api/posts
 const createPost = async (req, res, next) => {
     try {
-      let { title, category, description } = req.body;
-      if (!title || !category || !description || !req.file) {
-        console.error("Missing required fields or thumbnail.");
-        return next(new HttpError("Fill in all fields and choose thumbnail.", 422));
-      }
-  
-      const thumbnailLocalPath = req.file.path;
-      const cloudinaryResult = await uploadOnCloudinary(thumbnailLocalPath);
-      if (!cloudinaryResult) {
-        console.error("Cloudinary upload failed.");
-        return next(new HttpError("Thumbnail upload failed", 422));
-      }
-  
-      const thumbnail = cloudinaryResult.secure_url || cloudinaryResult.url;
-  
-      const newPost = await Post.create({ title, category, description, thumbnail, creator: req.user.id });
-      if (!newPost) {
-        console.error("Post creation failed.");
-        return next(new HttpError("Post couldn't be created.", 422));
-      }
-  
-      const currentUser = await User.findById(req.user.id);
-      const userPostcount = currentUser.posts + 1;
-      await User.findByIdAndUpdate(req.user.id, { posts: userPostcount });
-  
-      res.status(201).json(newPost);
+        let { title, category, description } = req.body;
+        if (!title || !category || !description || !req.file) {
+            return next(new HttpError("Fill in all fields and choose thumbnail.", 422));
+        }
+
+        const thumbnailLocalPath = req.file.path;
+        if (!thumbnailLocalPath) {
+            return next(new HttpError("Thumbnail is required", 422));
+        }
+
+        const cloudinaryResult = await uploadOnCloudinary(thumbnailLocalPath);
+        if (!cloudinaryResult) {
+            return next(new HttpError("Thumbnail upload failed", 422));
+        }
+
+        // Save only the URL or secure URL to the thumbnail field
+        const thumbnail = cloudinaryResult.secure_url || cloudinaryResult.url;
+
+        const newPost = await Post.create({ title, category, description, thumbnail, creator: req.user.id });
+        if (!newPost) {
+            return next(new HttpError("Post couldn't be created.", 422));
+        }
+
+        const currentUser = await User.findById(req.user.id);
+        const userPostcount = currentUser.posts + 1;
+        await User.findByIdAndUpdate(req.user.id, { posts: userPostcount });
+
+        res.status(201).json(newPost);
     } catch (error) {
-      console.error("Server Error:", error);
-      return next(new HttpError(error.message, 500));
+        return next(new HttpError(error.message, 500));
     }
-  };
-  
+};
 
 
 
