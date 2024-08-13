@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/userContext";
 
 const Login = () => {
   const [userData, setUserData] = useState({

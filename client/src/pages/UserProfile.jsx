@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FaCheck, FaEdit } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/userContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 const BASE_URL = process.env.REACT_APP_BASE_URL;

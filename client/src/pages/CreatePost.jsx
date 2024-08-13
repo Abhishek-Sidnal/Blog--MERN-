@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { UserContext } from "../context/UserContext"; // Importing the UserContext
+import { UserContext } from "../context/userContext"; // Importing the UserContext
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";

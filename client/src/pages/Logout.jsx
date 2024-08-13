@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/userContext";
 
 const Logout = () => {
   const { setCurrentUser } = useContext(UserContext);
