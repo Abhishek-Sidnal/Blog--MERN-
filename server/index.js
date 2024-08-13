@@ -12,13 +12,12 @@ const app = express();
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: "https://frontend-75cg.onrender.com" }));
-app.use('/uploads', express.static(__dirname + '/uploads'))
 
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
 app.use(notFound);
-app.use(errorHandler);
+app.use(errorHandler);s
 
 
 const port = process.env.PORT;
