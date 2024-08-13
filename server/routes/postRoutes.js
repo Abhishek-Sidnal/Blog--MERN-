@@ -5,7 +5,7 @@ const { upload } = require('../middleware/multer.middleware')
 
 const router = Router();
 
-router.post('/', authMiddleware,upload.single("thumbnail"), createPost);
+router.post('/', authMiddleware, upload.single("thumbnail"), createPost);
 router.get('/', getPosts);
 router.get('/:id', getPost);
 router.get('/categories/:category', getCatPosts);

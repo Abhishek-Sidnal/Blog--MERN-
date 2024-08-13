@@ -12,10 +12,4 @@ router.get('/', getAuthors)
 router.post('/change-avatar', authMiddleware, changeAvatar)
 router.patch('/edit-user', authMiddleware, editUser)
 
-
-
-
-
-
-
 module.exports = router;

@@ -7,24 +7,22 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 const CreatePost = () => {
-  const [title, setTitle] = useState(""); // State for post title
-  const [category, setCategory] = useState("Uncategorized"); // State for post category
-  const [description, setDescription] = useState(""); // State for post description
-  const [thumbnail, setThumbnail] = useState(""); // State for post thumbnail
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("Uncategorized");
+  const [description, setDescription] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
 
-  const { currentUser } = useContext(UserContext); // Accessing current user from context
-  const token = currentUser?.token; // Getting the user's token
+  const { currentUser } = useContext(UserContext);
+  const token = currentUser?.token;
 
   const navigate = useNavigate();
-
-  // Redirect to login if the user is not authenticated
+  // redirect to login page for any user who isn't loogged in
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
   }, [token, navigate]);
 
-  // Configuration for the ReactQuill editor
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -54,7 +52,6 @@ const CreatePost = () => {
     "image",
   ];
 
-  // List of predefined categories
   const POST_CATEGORIES = [
     "Agriculture",
     "Business",
@@ -66,7 +63,6 @@ const CreatePost = () => {
     "Weather",
   ];
 
-  // Function to handle form submission
   const createPost = async (e) => {
     e.preventDefault();
     const postData = new FormData();
@@ -82,11 +78,12 @@ const CreatePost = () => {
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 201) {
-        toast.success(`${title} posted successfully.`);
+        toast.success(`${title} posted succfull.`);
         return navigate("/");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "An error occurred.");
+      console.error("Error creating post:", err, err.response.data.message);
+      toast.error(err.response.data.message);
     }
   };
 
