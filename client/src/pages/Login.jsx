@@ -10,7 +10,6 @@ const Login = () => {
     password: "",
   });
 
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { setCurrentUser } = useContext(UserContext);
 
@@ -23,7 +22,7 @@ const Login = () => {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    setError("");
+    setIsLoading(true); // Start loading
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/users/login`,
@@ -37,6 +36,8 @@ const Login = () => {
       toast.error(
         error.response?.data?.message || "Login failed. Please try again."
       );
+    } finally {
+      setIsLoading(false); // Start loading
     }
   };
 
