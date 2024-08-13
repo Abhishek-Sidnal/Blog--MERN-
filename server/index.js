@@ -17,7 +17,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
 app.use(notFound);
-app.use(errorHandler);s
+app.use(errorHandler);
 
 
 const port = process.env.PORT;
