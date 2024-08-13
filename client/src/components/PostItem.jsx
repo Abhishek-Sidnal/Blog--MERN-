@@ -45,7 +45,7 @@ const PostItem = ({
             __html: removeExtraSpaceBetweenTags(shortDesc),
           }}
         ></p>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mt-3">
           <PostAuthor authorID={authorID} createdAt={createdAt} />
           <Link
             to={`/posts/categories/${category}`}
