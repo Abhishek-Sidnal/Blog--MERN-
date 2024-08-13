@@ -10,6 +10,7 @@ const { uploadOnCloudinary } = require('../utils/cloudinary')
 // ==========================CREATE A Post
 // Post :api/posts
 const createPost = async (req, res, next) => {
+    console.log("heloo")
     try {
         let { title, category, description } = req.body;
         if (!title || !category || !description || !req.file) {
