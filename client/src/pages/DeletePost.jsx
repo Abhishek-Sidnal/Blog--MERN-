@@ -24,7 +24,10 @@ const DeletePost = ({ postId }) => {
         `${process.env.REACT_APP_BASE_URL}/posts/${postId}`,
         {
           withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       if (response.status === 200) {
