@@ -13,23 +13,26 @@ const createPost = async (req, res, next) => {
     try {
         let { title, category, description } = req.body;
         if (!title || !category || !description || !req.file) {
-            return next(new HttpError("Fill in all fields and choose thumbnail.", 422));
+            return next(new HttpError("Fill in all fields and choose a thumbnail.", 422));
         }
 
         const thumbnailLocalPath = req.file.path;
-        if (!thumbnailLocalPath) {
-            return next(new HttpError("Thumbnail is required", 422));
-        }
 
         const cloudinaryResult = await uploadOnCloudinary(thumbnailLocalPath);
         if (!cloudinaryResult) {
             return next(new HttpError("Thumbnail upload failed", 422));
         }
 
-        // Save only the URL or secure URL to the thumbnail field
         const thumbnail = cloudinaryResult.secure_url || cloudinaryResult.url;
 
-        const newPost = await Post.create({ title, category, description, thumbnail, creator: req.user.id });
+        const newPost = await Post.create({
+            title,
+            category,
+            description,
+            thumbnail,
+            creator: req.user.id,
+        });
+
         if (!newPost) {
             return next(new HttpError("Post couldn't be created.", 422));
         }
@@ -40,9 +43,11 @@ const createPost = async (req, res, next) => {
 
         res.status(201).json(newPost);
     } catch (error) {
-        return next(new HttpError(error.message, 500));
+        console.error("Error during post creation:", error);
+        return next(new HttpError("Server error during post creation.", 500));
     }
 };
+
 
 
 
