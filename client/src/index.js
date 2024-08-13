@@ -24,7 +24,7 @@ import UserProvider from './context/UserContext';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserProvider><Layout /></UserProvider>,
+    element: <UserProvider>  <Layout /></UserProvider>,
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
