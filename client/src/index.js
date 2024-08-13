@@ -18,13 +18,13 @@ import Dashboard from './pages/Dashboard'
 import EditPost from './pages/EditPost'
 import Logout from './pages/Logout'
 import { Toaster } from 'react-hot-toast';
-import UserProvider from './context/UserContext';
+import UserProvider from './context/userContext';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserProvider>  <Layout /></UserProvider>,
+    element: <UserProvider> <Layout /></UserProvider>,
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
@@ -49,4 +49,5 @@ root.render(
     <RouterProvider router={router} />
     <Toaster />
   </React.StrictMode>
+
 );
