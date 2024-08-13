@@ -106,7 +106,11 @@ const EditPost = () => {
     <section className="w-full max-w-3xl mx-auto mt-10 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
       <div className="flex flex-col gap-6">
         <h2 className="text-2xl font-bold text-accent">Edit Post</h2>
-        <form className="flex flex-col gap-6" onSubmit={editPost}>
+        <form
+          className="flex flex-col gap-6"
+          onSubmit={editPost}
+          enctype="multipart/form-data"
+        >
           <input
             className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             type="text"
