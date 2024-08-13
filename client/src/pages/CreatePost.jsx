@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { UserContext } from "../context/userContext";
+import { UserContext } from "../context/userContext"; // Importing the UserContext
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -88,10 +88,9 @@ const CreatePost = () => {
   };
 
   return (
-    <section className="w-full max-w-3xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+    <section className="w-full max-w-3xl mx-auto my-8 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
       <div className="flex flex-col gap-6">
         <h2 className="font-bold text-2xl sm:text-3xl">Create Post</h2>
-        {/* Conditionally render the error message if needed */}
 
         <form
           className="flex flex-col gap-6"
@@ -99,7 +98,7 @@ const CreatePost = () => {
           enctype="multipart/form-data"
         >
           <input
-            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             type="text"
             placeholder="Title"
             value={title}
@@ -107,7 +106,7 @@ const CreatePost = () => {
             autoFocus
           />
           <select
-            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -118,7 +117,7 @@ const CreatePost = () => {
             ))}
           </select>
           <ReactQuill
-            className="bg-white h-64 overflow-auto"
+            className="bg-secondary-text h-64 overflow-auto border border-secondary-text rounded-lg focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             modules={modules}
             formats={formats}
             value={description}
@@ -126,12 +125,12 @@ const CreatePost = () => {
           />
           <input
             type="file"
-            className="border px-4 py-2 rounded-lg"
+            className="border border-secondary-text px-4 py-2 rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             onChange={(e) => setThumbnail(e.target.files[0])}
             accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className="px-6 py-2 bg-blue-700 rounded-lg text-white w-full sm:w-auto self-center hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold  self-center"
             type="submit"
           >
             Create Post
