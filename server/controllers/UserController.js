@@ -157,11 +157,10 @@ const changeAvatar = async (req, res, next) => {
 //==================================== Edit user details (from profile)
 // PUT : api/users/edit-user
 const editUser = async (req, res, next) => {
-    console.log('edit')
     try {
         const { name, email, currentPassword, newPassword, newConfirmPassword } = req.body;
-        if (!name || !email || !currentPassword || !newPassword || !newConfirmPassword) {
-            return next(new HttpError(" Fill all detail's ", 422))
+        if (!name || !email || !currentPassword || !newPassword) {
+            return next(new HttpError("Fill in all fields", 422))
         }
 
         // get user from db

@@ -56,7 +56,6 @@ const UserProfile = () => {
   const updateUserDetails = async (e) => {
     e.preventDefault();
     try {
-      const userData = new FormData();
       if (
         !name ||
         !email ||
@@ -67,18 +66,22 @@ const UserProfile = () => {
         return toast.error("Fill in all fields.");
       }
 
-      userData.set("name", name);
-      userData.set("email", email);
-      userData.set("currentPassword", currentPassword);
-      userData.set("newPassword", newPassword);
-      userData.set("newConfirmPassword", newConfirmPassword);
-      const resposne = await axios.patch(
+      const userData = {
+        name,
+        email,
+        currentPassword,
+        newPassword,
+        newConfirmPassword,
+      };
+
+      const response = await axios.patch(
         `${BASE_URL}/users/edit-user`,
         userData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
-      if (resposne.status === 200) {
-        toast.success("Deatils updated");
+
+      if (response.status === 200) {
+        toast.success("Details updated");
       }
     } catch (error) {
       toast.error(error.response.data.message);
