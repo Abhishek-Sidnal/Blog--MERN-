@@ -77,7 +77,7 @@ const UserProfile = () => {
         userData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
-      if (resposne.status == 200) {
+      if (resposne.status === 200) {
         toast.success("Deatils updated");
       }
     } catch (error) {
