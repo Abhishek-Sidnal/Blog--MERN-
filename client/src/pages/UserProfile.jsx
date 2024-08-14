@@ -73,6 +73,14 @@ const UserProfile = () => {
         newPassword,
         newConfirmPassword,
       };
+      console.log({
+        name,
+        email,
+        currentPassword,
+        newPassword,
+        newConfirmPassword
+    });
+    
 
       const response = await axios.patch(
         `${BASE_URL}/users/edit-user`,
