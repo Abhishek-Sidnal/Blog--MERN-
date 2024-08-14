@@ -34,7 +34,7 @@ const PostAuthor = ({ authorID, createdAt }) => {
       className="flex items-center space-x-2 hover:opacity-75 transition-opacity"
     >
       <img
-        src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${author?.avatar}`}
+        src={author?.avatar}
         alt={author?.name}
         className="w-10 h-10 rounded-full object-cover"
       />
