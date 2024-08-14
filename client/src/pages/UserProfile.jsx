@@ -6,7 +6,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-
 const UserProfile = () => {
   const [avatar, setAvatar] = useState("");
   const [name, setName] = useState("");
@@ -129,12 +128,14 @@ const UserProfile = () => {
             type="text"
             placeholder="Full Name"
             value={name}
+            name="name"
             onChange={(e) => setName(e.target.value)}
           />
           <input
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="email"
             placeholder="Email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -142,6 +143,7 @@ const UserProfile = () => {
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="password"
             placeholder="Current password"
+            name="currentPassword"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
           />
@@ -150,12 +152,14 @@ const UserProfile = () => {
             type="password"
             placeholder="New password"
             value={newPassword}
+            name="newPassword"
             onChange={(e) => setNewPassword(e.target.value)}
           />
           <input
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="password"
             placeholder="Confirm new password"
+            name="newConfirmPassword"
             value={newConfirmPassword}
             onChange={(e) => setNewConfirmPassword(e.target.value)}
           />
