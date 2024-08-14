@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next) => {
         jwt.verify(token, process.env.JWT_SECRET, (err, info) => {
             if (err) {
                 // If token is invalid or expired
-                return next(new HttpError("Unauthorized. Invalid token.", 401));
+                return next(new HttpError("Unauthorized. Invalid token. Re-login", 401));
             }
             // Attach user info to request object
             req.user = info;
