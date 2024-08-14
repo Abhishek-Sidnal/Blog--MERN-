@@ -183,7 +183,6 @@ const editUser = async (req, res, next) => {
 
         // Compare new passwords
         if (newPassword != newConfirmPassword) {
-            console.log("new password", newPassword, "newCOnfirmPassword", newConfirmPassword)
             return next(new HttpError("New password do not match", 422))
         }
         // Hash new password

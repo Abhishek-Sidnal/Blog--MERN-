@@ -25,7 +25,6 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
-      console.log("loading");
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/posts/users/${id}`,
@@ -47,7 +46,6 @@ const Dashboard = () => {
     return <Loader />;
   }
 
-  console.log(posts[0]);
   return (
     <section className="bg-background text-primary-text py-8 min-h-screen w-full">
       <div className="container mx-auto px-4">

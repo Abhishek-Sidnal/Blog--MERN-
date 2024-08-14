@@ -72,11 +72,6 @@ const CreatePost = () => {
     postData.append("description", description);
     postData.append("thumbnail", thumbnail);
 
-    // Log FormData for debugging
-    for (let pair of postData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/posts`,

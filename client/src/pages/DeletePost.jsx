@@ -5,7 +5,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const DeletePost = ({ postId }) => {
-  console.log("hello");
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser } = useContext(UserContext);

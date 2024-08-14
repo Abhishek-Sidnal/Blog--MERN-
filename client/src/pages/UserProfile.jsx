@@ -51,8 +51,9 @@ const UserProfile = () => {
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
       setAvatar(response?.data.avatar);
+      toast.success("Avatar updated!");
     } catch (error) {
-      console.log(error);
+      toast.error(error.response?.data?.message);
     }
   };
   const updateUserDetails = async (e) => {
