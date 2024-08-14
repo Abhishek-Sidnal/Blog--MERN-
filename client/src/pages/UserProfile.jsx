@@ -9,6 +9,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const UserProfile = () => {
   const [avatar, setAvatar] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -40,6 +41,15 @@ const UserProfile = () => {
     };
     getUser();
   }, []);
+
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    setAvatar(file); // Store the file object for upload
+
+    // Create a local URL for preview (not for saving)
+    const filePreviewURL = URL.createObjectURL(file);
+    setAvatarPreview(filePreviewURL); // Use this for preview in img src
+  };
 
   const changeAvatarHandler = async () => {
     setIsAvatarTouched(false);
@@ -125,7 +135,7 @@ const UserProfile = () => {
         <div className="relative flex flex-col items-center">
           <div className="relative rounded-full overflow-hidden w-32 h-32 sm:w-40 sm:h-40">
             <img
-              src={avatar}
+              src={avatarPreview || avatar}
               alt="User Avatar"
               className="w-full h-full object-cover"
             />
@@ -137,7 +147,7 @@ const UserProfile = () => {
               name="avatar"
               id="avatar"
               accept="png,jpg,jpeg"
-              onChange={(e) => setAvatar(e.target.files[0])}
+              onChange={handleAvatarChange}
             />
             <label
               onClick={() => setIsAvatarTouched(true)}
