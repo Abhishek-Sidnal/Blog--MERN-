@@ -6,6 +6,8 @@ const HttpError = require("../models/errorModel");
 const fs = require('fs');
 const { title } = require("process");
 const { uploadOnCloudinary } = require('../utils/cloudinary')
+const { v2: cloudinary } = require("cloudinary");
+
 
 // ==========================CREATE A Post
 // Post :api/posts
@@ -159,7 +161,7 @@ const editPost = async (req, res, next) => {
 // delete :api/posts/users/:id
 const deletePost = async (req, res, next) => {
     try {
-        const postId = req.params.id; // Correctly accessing postId from params
+        const postId = req.params.id;
         if (!postId) {
             return next(new HttpError("Post unavailable.", 400));
         }
@@ -169,36 +171,30 @@ const deletePost = async (req, res, next) => {
             return next(new HttpError("Post not found.", 404));
         }
 
-        const fileName = post.thumbnail;
+        // Extract the public ID from the thumbnail URL
+        const thumbnailUrl = post.thumbnail;
+        const publicId = thumbnailUrl.split('/').pop().split('.')[0]; // Extract public ID from the URL
 
-        // Delete thumbnail from uploads folder if exists
-        if (fileName) {
-            fs.unlink(path.join(__dirname, '..', 'uploads', fileName), async (err) => {
-                if (err) {
-                    return next(new HttpError("Error deleting file from server.", 500));
-                }
-                // Delete the post from the database
-                await Post.findByIdAndDelete(postId);
-                // Reduce the post count of the user
-                const currentUser = await User.findById(req.user.id);
-                if (currentUser) {
-                    const userPostCount = currentUser.posts - 1;
-                    await User.findByIdAndUpdate(req.user.id, { posts: userPostCount });
-                }
-
-                // Send response after everything is done
-                res.json({ message: `Post ${postId} deleted successfully.` });
-            });
-        } else {
-            // If no thumbnail, just delete the post and update user post count
-            await Post.findByIdAndDelete(postId);
-            const currentUser = await User.findById(req.user.id);
-            if (currentUser) {
-                const userPostCount = currentUser.posts - 1;
-                await User.findByIdAndUpdate(req.user.id, { posts: userPostCount });
+        // Delete the image from Cloudinary
+        await cloudinary.uploader.destroy(publicId, (error, result) => {
+            if (error) {
+                return next(new HttpError("Failed to delete image from Cloudinary.", 500));
             }
-            res.json({ message: `Post ${postId} deleted successfully.` });
+        });
+
+        // Delete the post from the database
+        await Post.findByIdAndDelete(postId);
+
+        // Reduce the post count of the user
+        const currentUser = await User.findById(req.user.id);
+        if (currentUser) {
+            const userPostCount = currentUser.posts - 1;
+            await User.findByIdAndUpdate(req.user.id, { posts: userPostCount });
         }
+
+        // Send response after everything is done
+        res.json({ message: `Post ${postId} deleted successfully.` });
+
     } catch (error) {
         return next(new HttpError("An error occurred while deleting the post.", 500));
     }
