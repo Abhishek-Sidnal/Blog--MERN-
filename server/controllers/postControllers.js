@@ -103,48 +103,100 @@ const getUserPosts = async (req, res, next) => {
 
 // ==========================Edit posts
 // Patch :api/posts/users/:id
+// const editPost = async (req, res, next) => {
+//     try {
+//         let updatePost;
+//         const postId = req.params.id;
+//         let { title, category, description } = req.body;
+
+//         if (!title || !category || description.length < 12) {
+//             return next(new HttpError("Fill in all fields.", 422));
+//         }
+
+//         if (!req.files) {
+//             // Update post without changing the thumbnail
+//             updatePost = await Post.findByIdAndUpdate(postId, { title, category, description }, { new: true });
+//         } else {
+//             // Get old post from the database
+//             const oldPost = await Post.findById(postId);
+//             if (oldPost.thumbnail) {
+//                 fs.unlink(path.join(__dirname, '..', 'uploads', oldPost.thumbnail), (err) => {
+//                     if (err) {
+//                         return next(new HttpError(err));
+//                     }
+//                 });
+//             }
+
+//             // Upload new thumbnail
+//             const { thumbnail } = req.files;
+//             if (thumbnail.size > 2000000) {
+//                 return next(new HttpError("Thumbnail too big. Should be less than 2MB.", 422));
+//             }
+
+//             const fileName = thumbnail.name;
+//             const splittedFilename = fileName.split('.');
+//             const newFilename = splittedFilename[0] + uuid() + '.' + splittedFilename[splittedFilename.length - 1];
+
+//             thumbnail.mv(path.join(__dirname, '..', 'uploads', newFilename), async (err) => {
+//                 if (err) {
+//                     return next(new HttpError("Thumbnail upload failed.", 500));
+//                 }
+//             });
+
+//             updatePost = await Post.findByIdAndUpdate(postId, { title, category, description, thumbnail: newFilename }, { new: true });
+//         }
+
+//         if (!updatePost) {
+//             return next(new HttpError("Couldn't update post.", 400));
+//         }
+
+//         res.status(200).json(updatePost);
+//     } catch (error) {
+//         return next(new HttpError("An error occurred while updating the post.", 500));
+//     }
+// };
+
 const editPost = async (req, res, next) => {
     try {
-        let updatePost;
         const postId = req.params.id;
-        let { title, category, description } = req.body;
+        const { title, category, description } = req.body;
 
-        if (!title || !category || description.length < 12) {
+        if (!title || !category || !description || description.length < 12) {
             return next(new HttpError("Fill in all fields.", 422));
         }
 
-        if (!req.files) {
-            // Update post without changing the thumbnail
-            updatePost = await Post.findByIdAndUpdate(postId, { title, category, description }, { new: true });
-        } else {
-            // Get old post from the database
+        let updateData = { title, category, description };
+
+        // If a new thumbnail is provided
+        if (req.file) {
+            // Get the old post
             const oldPost = await Post.findById(postId);
+            if (!oldPost) {
+                return next(new HttpError("Post not found.", 404));
+            }
+
+            // Remove the old thumbnail from Cloudinary
             if (oldPost.thumbnail) {
-                fs.unlink(path.join(__dirname, '..', 'uploads', oldPost.thumbnail), (err) => {
-                    if (err) {
-                        return next(new HttpError(err));
+                const publicId = oldPost.thumbnail.split('/').pop().split('.')[0];
+                await cloudinary.uploader.destroy(publicId, (error) => {
+                    if (error) {
+                        return next(new HttpError("Failed to delete old thumbnail from Cloudinary.", 500));
                     }
                 });
             }
 
-            // Upload new thumbnail
-            const { thumbnail } = req.files;
-            if (thumbnail.size > 2000000) {
-                return next(new HttpError("Thumbnail too big. Should be less than 2MB.", 422));
+            // Upload the new thumbnail to Cloudinary
+            const thumbnailLocalPath = req.file.path;
+            const cloudinaryResult = await uploadOnCloudinary(thumbnailLocalPath);
+            if (!cloudinaryResult) {
+                return next(new HttpError("Thumbnail upload failed", 422));
             }
 
-            const fileName = thumbnail.name;
-            const splittedFilename = fileName.split('.');
-            const newFilename = splittedFilename[0] + uuid() + '.' + splittedFilename[splittedFilename.length - 1];
-
-            thumbnail.mv(path.join(__dirname, '..', 'uploads', newFilename), async (err) => {
-                if (err) {
-                    return next(new HttpError("Thumbnail upload failed.", 500));
-                }
-            });
-
-            updatePost = await Post.findByIdAndUpdate(postId, { title, category, description, thumbnail: newFilename }, { new: true });
+            updateData.thumbnail = cloudinaryResult.secure_url || cloudinaryResult.url;
         }
+
+        // Update the post with the new data
+        const updatePost = await Post.findByIdAndUpdate(postId, updateData, { new: true });
 
         if (!updatePost) {
             return next(new HttpError("Couldn't update post.", 400));
@@ -155,6 +207,7 @@ const editPost = async (req, res, next) => {
         return next(new HttpError("An error occurred while updating the post.", 500));
     }
 };
+
 
 // ==========================Delete Posts
 // delete :api/posts/users/:id
