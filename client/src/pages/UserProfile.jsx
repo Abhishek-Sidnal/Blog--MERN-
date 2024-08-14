@@ -57,7 +57,7 @@ const UserProfile = () => {
   };
   const updateUserDetails = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsLoading(true); // Start loading
     try {
       if (
         !name ||
@@ -66,7 +66,9 @@ const UserProfile = () => {
         !newPassword ||
         !newConfirmPassword
       ) {
-        return toast.error("Fill in all fields.");
+        toast.error("Fill in all fields.");
+        setIsLoading(false); // Stop loading when validation fails
+        return;
       }
 
       const userData = {
@@ -92,14 +94,15 @@ const UserProfile = () => {
 
       if (response.status === 200) {
         toast.success("Details updated");
-        navigate(0);
+        navigate(0); // Refresh the page
       }
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
-      setIsLoading(false); // Start loading
+      setIsLoading(false); // Ensure loading stops in all cases
     }
   };
+
   if (isLoading) {
     return <Loader />; // Show loading spinner if data is being fetched
   }
