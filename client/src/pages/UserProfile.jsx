@@ -20,7 +20,6 @@ const UserProfile = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false); // State to track loading
 
-
   const navigate = useNavigate();
   // redirect to login page if the user is not logged in
   useEffect(() => {
@@ -57,7 +56,6 @@ const UserProfile = () => {
     }
   };
   const updateUserDetails = async (e) => {
-
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -83,9 +81,8 @@ const UserProfile = () => {
         email,
         currentPassword,
         newPassword,
-        newConfirmPassword
-    });
-    
+        newConfirmPassword,
+      });
 
       const response = await axios.patch(
         `${BASE_URL}/users/edit-user`,
@@ -99,12 +96,12 @@ const UserProfile = () => {
       }
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setIsLoading(false); // Start loading
     }
-    setIsLoading(false)
   };
   if (isLoading) {
     return <Loader />; // Show loading spinner if data is being fetched
-
   }
 
   return (
