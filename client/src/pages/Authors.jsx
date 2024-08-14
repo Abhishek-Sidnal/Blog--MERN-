@@ -37,7 +37,7 @@ const Authors = () => {
               <Link
                 key={id}
                 to={`/posts/users/${id}`}
-                className="bg-background p-4 rounded-lg flex items-center space-x-4 hover:bg-secondary-text transition duration-300"
+                className="bg-white p-4 rounded-lg flex items-center space-x-4 hover:bg-secondary-text transition duration-300"
               >
                 <img
                   src={avatar}
