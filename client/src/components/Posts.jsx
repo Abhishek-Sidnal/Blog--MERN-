@@ -29,7 +29,7 @@ const Posts = () => {
   }
 
   return (
-    <section className="p-6 bg-white bg-opacity-80 backdrop-blur-lg min-h-screen w-full ">
+    <section className="p-4 bg-background bg-opacity-80 backdrop-blur-lg min-h-screen w-full ">
       <div className="container mx-auto">
         {posts.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
