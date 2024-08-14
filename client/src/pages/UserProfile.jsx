@@ -94,7 +94,7 @@ const UserProfile = () => {
 
       if (response.status === 200) {
         toast.success("Details updated");
-        navigate(0); // Refresh the page
+        navigate("/"); // Refresh the page
       }
     } catch (error) {
       toast.error(error.response.data.message);
