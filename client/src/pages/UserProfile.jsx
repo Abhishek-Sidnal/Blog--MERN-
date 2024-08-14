@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const UserProfile = () => {
@@ -17,6 +18,8 @@ const UserProfile = () => {
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(false); // State to track loading
+
 
   const navigate = useNavigate();
   // redirect to login page if the user is not logged in
@@ -54,7 +57,9 @@ const UserProfile = () => {
     }
   };
   const updateUserDetails = async (e) => {
+
     e.preventDefault();
+    setIsLoading(true);
     try {
       if (
         !name ||
@@ -90,11 +95,17 @@ const UserProfile = () => {
 
       if (response.status === 200) {
         toast.success("Details updated");
+        navigate(0);
       }
     } catch (error) {
       toast.error(error.response.data.message);
     }
+    setIsLoading(false)
   };
+  if (isLoading) {
+    return <Loader />; // Show loading spinner if data is being fetched
+
+  }
 
   return (
     <section className="w-full max-w-lg my-8 p-4 mx-auto bg-white rounded-xl shadow-md">
