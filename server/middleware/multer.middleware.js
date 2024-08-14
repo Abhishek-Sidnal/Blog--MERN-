@@ -1,11 +1,12 @@
 const multer = require('multer');
+const path = require('path');
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './public/temp');
+    destination: (req, file, cb) => {
+        cb(null, './uploads/'); // Adjust the path as needed
     },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 

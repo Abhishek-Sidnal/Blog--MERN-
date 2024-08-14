@@ -62,7 +62,7 @@ const Dashboard = () => {
               >
                 <div className="mb-4">
                   <img
-                    src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${post.thumbnail}`}
+                    src={post.thumbnail}
                     alt={post.title}
                     className="w-full h-48 object-cover rounded-lg"
                   />
@@ -82,7 +82,7 @@ const Dashboard = () => {
                     >
                       Edit
                     </Link>
-                      <DeletePost postId={post._id} />
+                    <DeletePost postId={post._id} />
                   </div>
                 </div>
               </article>

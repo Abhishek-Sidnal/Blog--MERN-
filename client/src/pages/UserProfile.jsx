@@ -40,20 +40,25 @@ const UserProfile = () => {
     };
     getUser();
   }, []);
+
   const changeAvatarHandler = async () => {
     setIsAvatarTouched(false);
     try {
       const postData = new FormData();
-      postData.set("avatar", avatar);
+      postData.set("avatar", avatar); // Assuming avatar is the file object
+
       const response = await axios.post(
         `${BASE_URL}/users/change-avatar`,
         postData,
-        { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       setAvatar(response?.data.avatar);
       toast.success("Avatar updated!");
     } catch (error) {
-      toast.error(error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Avatar update failed.");
     }
   };
   const updateUserDetails = async (e) => {
@@ -120,7 +125,7 @@ const UserProfile = () => {
         <div className="relative flex flex-col items-center">
           <div className="relative rounded-full overflow-hidden w-32 h-32 sm:w-40 sm:h-40">
             <img
-              src={`${process.env.REACT_APP_ASSETS_URL}/uploads/${avatar}`}
+              src={avatar}
               alt="User Avatar"
               className="w-full h-full object-cover"
             />

@@ -98,62 +98,37 @@ const getUser = async (req, res, next) => {
 
 //==================================== Change user avatar
 // PUT : api/users/change-avatar
+const { uploadOnCloudinary } = require('../utils/cloudinary');
+
 const changeAvatar = async (req, res, next) => {
     try {
-        // Check if avatar file is provided
-        if (!req.files || !req.files.avatar) {
-            return next(new HttpError("Please choose an image", 422));
+        if (!req.file) {
+            return next(new HttpError("Avatar file is required.", 422));
         }
 
-        // Find user from database
-        const user = await User.findById(req.user.id);
-
-        // Delete old avatar if it exists
-        if (user.avatar) {
-            fs.unlink(path.join(__dirname, '..', 'uploads', user.avatar), (err) => {
-                if (err) {
-                    return next(new HttpError("Failed to delete old avatar.", 500));
-                }
-            });
+        // Upload the avatar to Cloudinary
+        const cloudinaryResult = await uploadOnCloudinary(req.file.path);
+        if (!cloudinaryResult) {
+            return next(new HttpError("Avatar upload failed.", 500));
         }
 
-        const { avatar } = req.files;
+        // Update user's avatar URL
+        const avatarUrl = cloudinaryResult.secure_url || cloudinaryResult.url;
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id,
+            { avatar: avatarUrl },
+            { new: true }
+        );
 
-        // Check file size
-        if (avatar.size > 500000) {
-            return next(new HttpError("Profile picture too big. Should be less than 500KB", 422));
+        if (!updatedUser) {
+            return next(new HttpError("Failed to update avatar.", 500));
         }
 
-        // Generate new filename
-        let fileName = avatar.name;
-        let splittedFilename = fileName.split('.');
-        let newFilename = `${splittedFilename[0]}_${uuid()}.${splittedFilename[splittedFilename.length - 1]}`;
-
-        // Move the new avatar to the uploads directory
-        avatar.mv(path.join(__dirname, '..', 'uploads', newFilename), async (err) => {
-            if (err) {
-                return next(new HttpError("Failed to upload new avatar.", 500));
-            }
-
-            // Update user's avatar in the database
-            const updatedAvatar = await User.findByIdAndUpdate(
-                req.user.id,
-                { avatar: newFilename },
-                { new: true }
-            );
-
-            if (!updatedAvatar) {
-                return next(new HttpError("Avatar couldn't be changed.", 422));
-            }
-
-            // Respond with the updated user object
-            res.status(200).json(updatedAvatar);
-        });
+        res.status(200).json({ avatar: updatedUser.avatar });
     } catch (error) {
-        return next(new HttpError("An error occurred while changing avatar.", 500));
+        return next(new HttpError("An error occurred while updating the avatar.", 500));
     }
 };
-
 //==================================== Edit user details (from profile)
 // PUT : api/users/edit-user
 const editUser = async (req, res, next) => {
