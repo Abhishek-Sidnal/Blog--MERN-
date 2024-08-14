@@ -57,26 +57,28 @@ const UserProfile = () => {
     e.preventDefault();
     try {
       const userData = new FormData();
+      if (
+        !name ||
+        !email ||
+        !currentPassword ||
+        !newPassword ||
+        !newConfirmPassword
+      ) {
+        return toast.error("Fill in all fields.");
+      }
+
       userData.set("name", name);
       userData.set("email", email);
       userData.set("currentPassword", currentPassword);
       userData.set("newPassword", newPassword);
       userData.set("newConfirmPassword", newConfirmPassword);
-      console.log({
-        name,
-        email,
-        currentPassword,
-        newPassword,
-        newConfirmPassword,
-      });
-
       const resposne = await axios.patch(
         `${BASE_URL}/users/edit-user`,
         userData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
       if (resposne.status == 200) {
-        toast.success("Detail Updated");
+        toast.success("Deatils updated");
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -136,14 +138,12 @@ const UserProfile = () => {
             type="text"
             placeholder="Full Name"
             value={name}
-            name="name"
             onChange={(e) => setName(e.target.value)}
           />
           <input
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="email"
             placeholder="Email"
-            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -151,7 +151,6 @@ const UserProfile = () => {
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="password"
             placeholder="Current password"
-            name="currentPassword"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
           />
@@ -160,14 +159,12 @@ const UserProfile = () => {
             type="password"
             placeholder="New password"
             value={newPassword}
-            name="newPassword"
             onChange={(e) => setNewPassword(e.target.value)}
           />
           <input
             className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="password"
             placeholder="Confirm new password"
-            name="newConfirmPassword"
             value={newConfirmPassword}
             onChange={(e) => setNewConfirmPassword(e.target.value)}
           />
