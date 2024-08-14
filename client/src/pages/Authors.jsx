@@ -29,7 +29,7 @@ const Authors = () => {
   }
 
   return (
-    <section className="bg-background text-primary-text py-8 w-full">
+    <section className="bg-white text-primary-text py-8 w-full">
       <div className="container mx-auto px-4">
         {authors.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
