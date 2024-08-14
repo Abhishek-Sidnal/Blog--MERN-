@@ -62,13 +62,21 @@ const UserProfile = () => {
       userData.set("currentPassword", currentPassword);
       userData.set("newPassword", newPassword);
       userData.set("newConfirmPassword", newConfirmPassword);
+      console.log({
+        name,
+        email,
+        currentPassword,
+        newPassword,
+        newConfirmPassword,
+      });
+
       const resposne = await axios.patch(
         `${BASE_URL}/users/edit-user`,
         userData,
         { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
       );
       if (resposne.status == 200) {
-        toast.success("password changed");
+        toast.success("Detail Updated");
       }
     } catch (error) {
       toast.error(error.response.data.message);
