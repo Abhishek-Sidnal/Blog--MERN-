@@ -160,7 +160,7 @@ const editUser = async (req, res, next) => {
     try {
         const { name, email, currentPassword, newPassword, newConfirmPassword } = req.body;
         if (!name || !email || !currentPassword || !newPassword) {
-            return next(new HttpError("Fill in all fields", 422))
+            return next(new HttpError(" Fill all detail's ", 422))
         }
 
         // get user from db
