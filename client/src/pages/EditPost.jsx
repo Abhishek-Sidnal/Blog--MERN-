@@ -103,7 +103,7 @@ const EditPost = () => {
   };
 
   return (
-    <section className="w-full max-w-3xl mx-auto mt-10 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
+    <section className="w-full max-w-3xl mx-auto my-6 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
       <div className="flex flex-col gap-6">
         <h2 className="text-2xl font-bold text-accent">Edit Post</h2>
         <form
@@ -144,7 +144,7 @@ const EditPost = () => {
             accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className="px-6 py-2 bg-accent text-primary-text rounded-lg w-full sm:w-auto self-center hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
+            className="px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold  self-center"
             type="submit"
           >
             Update Post
