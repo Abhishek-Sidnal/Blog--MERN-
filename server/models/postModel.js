@@ -7,11 +7,15 @@ const postSchema = new Schema({
         enum: [
             "Agriculture", "Business", "Education", "Entertainment", "Art", "Investment", "Uncategorized", "Weather"
         ],
-        message: "{VALUE} is not supported"  // Corrected typo
+        message: "{VALUE} is not supported"
     },
     description: { type: String, required: true },
-    creator: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Ensuring creator is always present
-    thumbnail: { type: String, required: true }, // Expecting a string URL here
+    creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    thumbnail: { type: String, required: true },
+    reviews: [{
+        type: Schema.Types.ObjectId,
+        ref: "Review"
+    }],
 }, { timestamps: true });
 
 module.exports = model("Post", postSchema);

@@ -1,5 +1,6 @@
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
+const Review = require("../models/reviewModel"); 
 const path = require('path');
 const { v4: uuid } = require('uuid');
 const HttpError = require("../models/errorModel");
@@ -67,15 +68,22 @@ const getPosts = async (req, res, next) => {
 const getPost = async (req, res, next) => {
     try {
         const postID = req.params.id;
-        const post = await Post.findById(postID);
+        const post = await Post.findById(postID)
+            .populate({
+                path: 'reviews',
+                populate: { path: 'author', select: 'name _id' }  // Populate the author's name (or any other fields you need)
+            });
+
         if (!post) {
-            return next(new HttpError("Post not found.", 404))
+            return next(new HttpError("Post not found.", 404));
         }
+
         res.status(200).json(post);
     } catch (error) {
-        return next(new HttpError(error))
+        return next(new HttpError(error.message, 500));
     }
-}
+};
+
 
 // ==========================Get Posts by category
 // get :api/posts/:id
@@ -234,6 +242,12 @@ const deletePost = async (req, res, next) => {
             }
         });
 
+        // Delete all reviews associated with this post
+        console.log("deleting the comment")
+        await Review.deleteMany({ _id: { $in: post.reviews } });
+        console.log("deleted the the comment")
+
+
         // Delete the post from the database
         await Post.findByIdAndDelete(postId);
 
@@ -245,7 +259,7 @@ const deletePost = async (req, res, next) => {
         }
 
         // Send response after everything is done
-        res.json({ message: `Post ${postId} deleted successfully.` });
+        res.json({ message: `Post ${postId} and associated reviews deleted successfully.` });
 
     } catch (error) {
         return next(new HttpError("An error occurred while deleting the post.", 500));
@@ -253,4 +267,6 @@ const deletePost = async (req, res, next) => {
 };
 
 
+
 module.exports = { createPost, getPosts, getPost, getCatPosts, getUserPosts, editPost, deletePost };
+
