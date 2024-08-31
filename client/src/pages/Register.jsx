@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -10,6 +11,7 @@ const Register = () => {
     password: "",
     password2: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -22,14 +24,22 @@ const Register = () => {
 
   const registerUser = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     // Basic client-side validation
-    if (!userData.name || !userData.email || !userData.password || !userData.password2) {
+    if (
+      !userData.name ||
+      !userData.email ||
+      !userData.password ||
+      !userData.password2
+    ) {
       toast.error("Please fill in all fields.");
+      setIsLoading(false);
       return;
     }
     if (userData.password !== userData.password2) {
       toast.error("Passwords do not match.");
+      setIsLoading(false);
       return;
     }
 
@@ -42,11 +52,14 @@ const Register = () => {
       if (!newUser) {
         toast.error("Couldn't register user. Please try again.");
       } else {
-        toast.success(`Registration successful! A verification email has been sent to ${userData.email}.`);
+        toast.success(
+          `Registration successful! A verification email has been sent to ${userData.email}.`
+        );
         navigate("/login");
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Registration failed.";
+      const errorMessage =
+        error.response?.data?.message || "Registration failed.";
       if (error.response?.status === 422) {
         toast.error("Validation error: " + errorMessage);
       } else if (error.response?.status === 500) {
@@ -54,8 +67,13 @@ const Register = () => {
       } else {
         toast.error(errorMessage);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <section className="bg-background text-primary-text min-h-screen flex items-center justify-center p-6">

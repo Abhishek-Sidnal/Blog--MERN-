@@ -5,18 +5,19 @@ import { UserContext } from "../context/userContext"; // Importing the UserConte
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [isLoading, setIsLoading] = useState(false); 
 
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
 
   const navigate = useNavigate();
-  // redirect to login page for any user who isn't loogged in
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -65,7 +66,7 @@ const CreatePost = () => {
 
   const createPost = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     const postData = new FormData();
     postData.append("title", title);
     postData.append("category", category);
@@ -93,7 +94,11 @@ const CreatePost = () => {
       console.error("Error creating post:", err);
       toast.error(err.response?.data?.message || "An error occurred");
     }
+    setIsLoading(false);
   };
+  if (isLoading) {
+    return <Loader />; 
+  }
 
   return (
     <section className="w-full max-w-3xl mx-auto my-8 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
