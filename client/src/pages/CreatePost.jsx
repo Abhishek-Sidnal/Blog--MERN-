@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { UserContext } from "../context/userContext"; // Importing the UserContext
+import { UserContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -18,6 +18,7 @@ const CreatePost = () => {
   const token = currentUser?.token;
 
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -65,8 +66,13 @@ const CreatePost = () => {
   ];
 
   const createPost = async (e) => {
-    setIsLoading(true);
     e.preventDefault();
+
+    // If the form is already being submitted, return early
+    if (isLoading) return;
+
+    setIsLoading(true);
+
     const postData = new FormData();
     postData.append("title", title);
     postData.append("category", category);
@@ -97,6 +103,7 @@ const CreatePost = () => {
       setIsLoading(false);
     }
   };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -144,8 +151,9 @@ const CreatePost = () => {
             accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className="px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold  self-center"
+            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold  self-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             type="submit"
+            disabled={isLoading}
           >
             Create Post
           </button>
