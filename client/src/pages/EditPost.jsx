@@ -5,12 +5,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 const EditPost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -66,6 +68,7 @@ const EditPost = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
+        setIsLoading(true); // Start loading
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/posts/${id}`
         );
@@ -74,6 +77,8 @@ const EditPost = () => {
         setDescription(response.data.description);
       } catch (err) {
         toast.error("Failed to fetch the post.");
+      } finally {
+        setIsLoading(false); // End loading
       }
     };
     getPost();
@@ -81,6 +86,12 @@ const EditPost = () => {
 
   const editPost = async (e) => {
     e.preventDefault();
+
+    // If the form is already being submitted, return early
+    if (isLoading) return;
+
+    setIsLoading(true); // Start loading
+
     const postData = new FormData();
     postData.set("title", title);
     postData.set("category", category);
@@ -91,7 +102,10 @@ const EditPost = () => {
       const response = await axios.patch(
         `${process.env.REACT_APP_BASE_URL}/posts/${id}`,
         postData,
-        { withCredentials: true, headers: { Authorization: `Bearer ${token}` } }
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       if (response.status === 200) {
         toast.success(`${title} updated successfully.`);
@@ -99,8 +113,14 @@ const EditPost = () => {
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update the post.");
+    } finally {
+      setIsLoading(false); // End loading
     }
   };
+
+  if (isLoading) {
+    return <Loader />; // Show loader during loading state
+  }
 
   return (
     <section className="w-full max-w-3xl mx-auto my-6 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
@@ -109,7 +129,7 @@ const EditPost = () => {
         <form
           className="flex flex-col gap-6"
           onSubmit={editPost}
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
         >
           <input
             className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
@@ -144,8 +164,9 @@ const EditPost = () => {
             accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className="px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold  self-center"
+            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold self-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             type="submit"
+            disabled={isLoading} // Disable button during loading
           >
             Update Post
           </button>
