@@ -11,7 +11,6 @@ const Register = () => {
     password2: "",
   });
 
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const changeInputHandler = (e) => {
@@ -23,21 +22,38 @@ const Register = () => {
 
   const registerUser = async (e) => {
     e.preventDefault();
-    setError("");
+
+    // Basic client-side validation
+    if (!userData.name || !userData.email || !userData.password || !userData.password2) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+    if (userData.password !== userData.password2) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/users/register`,
         userData
       );
-      const newUser = await response.data;
+      const newUser = response.data;
       if (!newUser) {
-        setError("Couldn't register user. Please try again.");
+        toast.error("Couldn't register user. Please try again.");
       } else {
-        toast.success(`${userData.name} Registered`);
+        toast.success(`Registration successful! A verification email has been sent to ${userData.email}.`);
         navigate("/login");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed.");
+      const errorMessage = error.response?.data?.message || "Registration failed.";
+      if (error.response?.status === 422) {
+        toast.error("Validation error: " + errorMessage);
+      } else if (error.response?.status === 500) {
+        toast.error("Server error: " + errorMessage);
+      } else {
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -99,5 +115,4 @@ const Register = () => {
     </section>
   );
 };
-
 export default Register;

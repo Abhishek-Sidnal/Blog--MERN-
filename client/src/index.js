@@ -19,6 +19,9 @@ import EditPost from './pages/EditPost'
 import Logout from './pages/Logout'
 import { Toaster } from 'react-hot-toast';
 import UserProvider from './context/userContext';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './components/VerifyEmail';
 
 
 const router = createBrowserRouter([
@@ -30,7 +33,10 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "posts/:id", element: <PostDetail /> },
       { path: "register", element: <Register /> },
+      { path: "verify-email/:token", element: <VerifyEmail /> },
       { path: "login", element: <Login /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
+      { path: "reset-password/:token", element: <ResetPassword /> },
       { path: "profile/:id", element: <UserProfile /> },
       { path: "authors", element: <Authors /> },
       { path: "create", element: <CreatePost /> },

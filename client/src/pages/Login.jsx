@@ -77,6 +77,15 @@ const Login = () => {
           </button>
         </form>
         <small className="block text-center mt-4">
+          Forgot your password?{" "}
+          <Link
+            to="/forgot-password"
+            className="text-accent hover:text-primary-text transition duration-300"
+          >
+            Reset Password
+          </Link>
+        </small>
+        <small className="block text-center mt-4">
           Don’t have an account?{" "}
           <Link
             to="/register"
