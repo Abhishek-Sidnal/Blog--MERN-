@@ -65,6 +65,7 @@ const CreatePost = () => {
   ];
 
   const createPost = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     const postData = new FormData();
     postData.append("title", title);
@@ -73,8 +74,6 @@ const CreatePost = () => {
     postData.append("thumbnail", thumbnail);
 
     try {
-      setIsLoading(true);
-
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/posts`,
         postData,
