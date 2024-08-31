@@ -68,7 +68,6 @@ const CreatePost = () => {
   const createPost = async (e) => {
     e.preventDefault();
 
-    // If the form is already being submitted, return early
     if (isLoading) return;
 
     setIsLoading(true);
