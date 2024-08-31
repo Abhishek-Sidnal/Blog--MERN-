@@ -24,9 +24,9 @@ const Register = () => {
 
   const registerUser = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
     setIsLoading(true);
 
-    // Basic client-side validation
     if (
       !userData.name ||
       !userData.email ||
@@ -71,6 +71,7 @@ const Register = () => {
       setIsLoading(false);
     }
   };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -115,7 +116,10 @@ const Register = () => {
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold  w-full"
+            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold w-full ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={isLoading}
           >
             Register
           </button>
@@ -133,4 +137,5 @@ const Register = () => {
     </section>
   );
 };
+
 export default Register;
