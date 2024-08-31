@@ -12,7 +12,7 @@ const CreatePost = () => {
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState("");
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
@@ -66,7 +66,6 @@ const CreatePost = () => {
 
   const createPost = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     const postData = new FormData();
     postData.append("title", title);
     postData.append("category", category);
@@ -74,6 +73,8 @@ const CreatePost = () => {
     postData.append("thumbnail", thumbnail);
 
     try {
+      setIsLoading(true);
+
       const response = await axios.post(
         `${process.env.REACT_APP_BASE_URL}/posts`,
         postData,
@@ -93,11 +94,12 @@ const CreatePost = () => {
     } catch (err) {
       console.error("Error creating post:", err);
       toast.error(err.response?.data?.message || "An error occurred");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
   if (isLoading) {
-    return <Loader />; 
+    return <Loader />;
   }
 
   return (
