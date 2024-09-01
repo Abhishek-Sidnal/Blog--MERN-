@@ -6,7 +6,9 @@ import toast from "react-hot-toast";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -16,24 +18,45 @@ const Posts = () => {
           `${process.env.REACT_APP_BASE_URL}/posts`
         );
         setPosts(response?.data);
+        setFilteredPosts(response?.data); // Initialize filteredPosts with all posts
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "Failed to load posts.");
       }
       setIsLoading(false);
     };
     fetchPosts();
   }, []);
 
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    } else {
+      setFilteredPosts(posts);
+    }
+  }, [searchQuery, posts]);
+
   if (isLoading) {
     return <Loader />;
   }
 
   return (
-    <section className="p-4 bg-background bg-opacity-80 backdrop-blur-lg min-h-screen w-full ">
+    <section className="p-4 bg-background bg-opacity-80 backdrop-blur-lg min-h-screen w-full">
       <div className="container mx-auto">
-        {posts.length > 0 ? (
+        <input
+          type="text"
+          placeholder="Search posts..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg"
+        />
+        {filteredPosts.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map(
+            {filteredPosts.map(
               ({
                 _id: id,
                 thumbnail,
