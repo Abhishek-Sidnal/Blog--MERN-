@@ -1,42 +1,64 @@
 import React, { useEffect, useState } from "react";
-import PostItem from "../components/PostItem"; // Component for rendering individual post items
-import toast from "react-hot-toast"; // For displaying error messages
-import axios from "axios"; // For making HTTP requests
-import Loader from "../components/Loader"; // Loading spinner component
-import { useParams } from "react-router-dom"; // For accessing URL parameters
+import PostItem from "../components/PostItem"; 
+import toast from "react-hot-toast"; 
+import axios from "axios"; 
+import Loader from "../components/Loader"; 
+import { useParams } from "react-router-dom"; 
 
 const CategoryPosts = () => {
-  const [posts, setPosts] = useState([]); // State to store posts
-  const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const [posts, setPosts] = useState([]); 
+  const [filteredPosts, setFilteredPosts] = useState([]); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { category } = useParams(); // Get category from URL params
+  const { category } = useParams(); 
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setIsLoading(true); // Start loading
+      setIsLoading(true); 
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/posts/categories/${category}` // Fetch posts by category
+          `${process.env.REACT_APP_BASE_URL}/posts/categories/${category}` 
         );
-        setPosts(response?.data); // Store posts in state
+        setPosts(response?.data); 
+        setFilteredPosts(response?.data); // Initialize filteredPosts with all posts
       } catch (error) {
-        toast.error(error.response.data.message); // Show error notification
+        toast.error(error.response?.data?.message || "Failed to load posts."); 
       }
-      setIsLoading(false); // Stop loading
+      setIsLoading(false); 
     };
     fetchPosts();
-  }, [category]); // Re-fetch posts when category changes
+  }, [category]); 
+
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = posts.filter(post =>
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredPosts(filtered);
+    } else {
+      setFilteredPosts(posts);
+    }
+  }, [searchQuery, posts]);
 
   if (isLoading) {
-    return <Loader />; // Show loading spinner if data is being fetched
+    return <Loader />; 
   }
 
   return (
     <section className="bg-background text-primary-text py-8 w-full">
       <div className="container mx-auto px-4">
-        {posts.length > 0 ? (
+        <input
+          type="text"
+          placeholder="Search posts..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg"
+        />
+        {filteredPosts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map(
+            {filteredPosts.map(
               ({
                 _id: id,
                 thumbnail,
