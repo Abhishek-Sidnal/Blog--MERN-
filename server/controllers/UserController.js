@@ -236,12 +236,14 @@ const editUser = async (req, res, next) => {
 // GET : api/users/authors
 const getAuthors = async (req, res, next) => {
     try {
-        const authors = await User.find().select('-password');
+        // Query to find only verified users and exclude the password field
+        const authors = await User.find({ isVerified: true }).select('-password');
         res.json(authors);
     } catch (error) {
-        return next(new HttpError(error));
+        return next(new HttpError(error.message || "Something went wrong, could not fetch authors."));
     }
 };
+
 
 // POST: api/users/forgot-password
 const forgotPassword = async (req, res, next) => {

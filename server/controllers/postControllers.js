@@ -109,60 +109,6 @@ const getUserPosts = async (req, res, next) => {
     }
 }
 
-// ==========================Edit posts
-// Patch :api/posts/users/:id
-// const editPost = async (req, res, next) => {
-//     try {
-//         let updatePost;
-//         const postId = req.params.id;
-//         let { title, category, description } = req.body;
-
-//         if (!title || !category || description.length < 12) {
-//             return next(new HttpError("Fill in all fields.", 422));
-//         }
-
-//         if (!req.files) {
-//             // Update post without changing the thumbnail
-//             updatePost = await Post.findByIdAndUpdate(postId, { title, category, description }, { new: true });
-//         } else {
-//             // Get old post from the database
-//             const oldPost = await Post.findById(postId);
-//             if (oldPost.thumbnail) {
-//                 fs.unlink(path.join(__dirname, '..', 'uploads', oldPost.thumbnail), (err) => {
-//                     if (err) {
-//                         return next(new HttpError(err));
-//                     }
-//                 });
-//             }
-
-//             // Upload new thumbnail
-//             const { thumbnail } = req.files;
-//             if (thumbnail.size > 2000000) {
-//                 return next(new HttpError("Thumbnail too big. Should be less than 2MB.", 422));
-//             }
-
-//             const fileName = thumbnail.name;
-//             const splittedFilename = fileName.split('.');
-//             const newFilename = splittedFilename[0] + uuid() + '.' + splittedFilename[splittedFilename.length - 1];
-
-//             thumbnail.mv(path.join(__dirname, '..', 'uploads', newFilename), async (err) => {
-//                 if (err) {
-//                     return next(new HttpError("Thumbnail upload failed.", 500));
-//                 }
-//             });
-
-//             updatePost = await Post.findByIdAndUpdate(postId, { title, category, description, thumbnail: newFilename }, { new: true });
-//         }
-
-//         if (!updatePost) {
-//             return next(new HttpError("Couldn't update post.", 400));
-//         }
-
-//         res.status(200).json(updatePost);
-//     } catch (error) {
-//         return next(new HttpError("An error occurred while updating the post.", 500));
-//     }
-// };
 
 const editPost = async (req, res, next) => {
     try {
