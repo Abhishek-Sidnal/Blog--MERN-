@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import hljs from "highlight.js";
-import "highlight.js/styles/monokai.css"; 
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import toast from "react-hot-toast";
@@ -28,9 +26,6 @@ const EditPost = () => {
   }, [token, navigate]);
 
   const modules = {
-    syntax: {
-      highlight: (text) => hljs.highlightAuto(text).value,
-    },
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
@@ -41,7 +36,6 @@ const EditPost = () => {
         { indent: "+1" },
       ],
       ["link", "image"],
-      ["code-block"], 
       ["clean"],
     ],
   };
@@ -58,7 +52,6 @@ const EditPost = () => {
     "indent",
     "link",
     "image",
-    "code-block",
   ];
 
   const POST_CATEGORIES = [
@@ -75,7 +68,7 @@ const EditPost = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
-        setIsLoading(true);
+        setIsLoading(true); // Start loading
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/posts/${id}`
         );
@@ -85,7 +78,7 @@ const EditPost = () => {
       } catch (err) {
         toast.error("Failed to fetch the post.");
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false); // End loading
       }
     };
     getPost();
@@ -94,9 +87,11 @@ const EditPost = () => {
   const editPost = async (e) => {
     e.preventDefault();
 
+    // If the form is already being submitted, return early
     if (isLoading) return;
 
-    setIsLoading(true); 
+    setIsLoading(true); // Start loading
+
     const postData = new FormData();
     postData.set("title", title);
     postData.set("category", category);
@@ -119,11 +114,13 @@ const EditPost = () => {
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update the post.");
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false); // End loading
     }
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading) {
+    return <Loader />; // Show loader during loading state
+  }
 
   return (
     <section className="w-full max-w-3xl mx-auto my-6 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
@@ -167,11 +164,9 @@ const EditPost = () => {
             accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold self-center ${
-              isLoading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold self-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading} // Disable button during loading
           >
             Update Post
           </button>

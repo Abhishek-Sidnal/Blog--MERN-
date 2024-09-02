@@ -36,7 +36,6 @@ const CreatePost = () => {
         { indent: "+1" },
       ],
       ["link", "image"],
-      ["code-block"],  // Add code block option here
       ["clean"],
     ],
   };
@@ -53,7 +52,6 @@ const CreatePost = () => {
     "indent",
     "link",
     "image",
-    "code-block",  // Add code block format here
   ];
 
   const POST_CATEGORIES = [
