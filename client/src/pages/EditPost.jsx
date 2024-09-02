@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import hljs from "highlight.js";
+import "highlight.js/styles/monokai.css"; 
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import toast from "react-hot-toast";
@@ -26,6 +28,9 @@ const EditPost = () => {
   }, [token, navigate]);
 
   const modules = {
+    syntax: {
+      highlight: (text) => hljs.highlightAuto(text).value,
+    },
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
       ["bold", "italic", "underline", "strike", "blockquote"],
@@ -36,7 +41,7 @@ const EditPost = () => {
         { indent: "+1" },
       ],
       ["link", "image"],
-      ["code-block"], // Add code block option here
+      ["code-block"], 
       ["clean"],
     ],
   };
@@ -53,7 +58,7 @@ const EditPost = () => {
     "indent",
     "link",
     "image",
-    "code-block", // Add code block format here
+    "code-block",
   ];
 
   const POST_CATEGORIES = [
@@ -70,7 +75,7 @@ const EditPost = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
-        setIsLoading(true); // Start loading
+        setIsLoading(true);
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/posts/${id}`
         );
@@ -80,7 +85,7 @@ const EditPost = () => {
       } catch (err) {
         toast.error("Failed to fetch the post.");
       } finally {
-        setIsLoading(false); // End loading
+        setIsLoading(false); 
       }
     };
     getPost();
@@ -89,11 +94,9 @@ const EditPost = () => {
   const editPost = async (e) => {
     e.preventDefault();
 
-    // If the form is already being submitted, return early
     if (isLoading) return;
 
-    setIsLoading(true); // Start loading
-
+    setIsLoading(true); 
     const postData = new FormData();
     postData.set("title", title);
     postData.set("category", category);
@@ -116,13 +119,11 @@ const EditPost = () => {
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update the post.");
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false); 
     }
   };
 
-  if (isLoading) {
-    return <Loader />; // Show loader during loading state
-  }
+  if (isLoading) return <Loader />;
 
   return (
     <section className="w-full max-w-3xl mx-auto my-6 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
@@ -170,7 +171,7 @@ const EditPost = () => {
               isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             type="submit"
-            disabled={isLoading} // Disable button during loading
+            disabled={isLoading}
           >
             Update Post
           </button>
