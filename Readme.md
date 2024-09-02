@@ -95,6 +95,7 @@ Contributions are welcome! Please fork this repository and submit a pull request
 
 If you have any questions or suggestions, feel free to reach out:
 
+[![Email](https://img.shields.io/badge/Email-apsidnal@gmail.com-red?style=flat&logo=gmail&logoColor=white)](mailto:apsidnal@gmail.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Abhishek--Sidnal-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/abhishek-sidnal/)
 [![GitHub](https://img.shields.io/badge/GitHub-Abhishek--Sidnal-lightgrey?style=flat&logo=github)](https://github.com/Abhishek-Sidnal/)
 [![Instagram](https://img.shields.io/badge/Instagram-apsidnal-E4405F?style=flat&logo=instagram&logoColor=white)](https://www.instagram.com/apsidnal/)
