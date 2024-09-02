@@ -36,6 +36,7 @@ const EditPost = () => {
         { indent: "+1" },
       ],
       ["link", "image"],
+      ["code-block"], // Add code block option here
       ["clean"],
     ],
   };
@@ -52,6 +53,7 @@ const EditPost = () => {
     "indent",
     "link",
     "image",
+    "code-block", // Add code block format here
   ];
 
   const POST_CATEGORIES = [
@@ -164,7 +166,9 @@ const EditPost = () => {
             accept="image/jpg, image/png, image/jpeg"
           />
           <button
-            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold self-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold self-center ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
             type="submit"
             disabled={isLoading} // Disable button during loading
           >
