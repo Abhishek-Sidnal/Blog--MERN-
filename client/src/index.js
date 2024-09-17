@@ -22,6 +22,7 @@ import UserProvider from './context/userContext';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './components/VerifyEmail';
+import axios from 'axios';
 
 
 const router = createBrowserRouter([
