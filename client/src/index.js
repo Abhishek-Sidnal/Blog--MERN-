@@ -49,6 +49,22 @@ const router = createBrowserRouter([
   }
 ])
 
+const url = `https://frontend-75cg.onrender.com/`;
+const interval = 30000;
+
+//Reloader Function
+function reloadWebsite() {
+  axios.get(url)
+    .then(response => {
+      console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`);
+    })
+    .catch(error => {
+      console.error(`Error reloading at ${new Date().toISOString()}:`, error.message);
+    });
+}
+
+setInterval(reloadWebsite, interval);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
