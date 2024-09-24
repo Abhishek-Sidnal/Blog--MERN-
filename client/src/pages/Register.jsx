@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Loader from "../components/Loader";
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -22,22 +21,42 @@ const Register = () => {
     }));
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    // Ensure password length is at least 6 characters
+    return password.length >= 6;
+  };
+
   const registerUser = async (e) => {
     e.preventDefault();
     if (isLoading) return;
     setIsLoading(true);
 
-    if (
-      !userData.name ||
-      !userData.email ||
-      !userData.password ||
-      !userData.password2
-    ) {
+    const { name, email, password, password2 } = userData;
+
+    if (!name || !email || !password || !password2) {
       toast.error("Please fill in all fields.");
       setIsLoading(false);
       return;
     }
-    if (userData.password !== userData.password2) {
+
+    if (!validateEmail(email)) {
+      toast.error("Please enter a valid email.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      toast.error("Password should be at least 6 characters.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password !== password2) {
       toast.error("Passwords do not match.");
       setIsLoading(false);
       return;
@@ -49,13 +68,13 @@ const Register = () => {
         userData
       );
       const newUser = response.data;
-      if (!newUser) {
-        toast.error("Couldn't register user. Please try again.");
-      } else {
+      if (newUser) {
         toast.success(
-          `Registration successful! A verification email has been sent to ${userData.email}.`
+          `Registration successful! A verification email has been sent to ${email}.`
         );
         navigate("/login");
+      } else {
+        toast.error("Couldn't register user. Please try again.");
       }
     } catch (error) {
       const errorMessage =
@@ -72,10 +91,6 @@ const Register = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   return (
     <section className="bg-background text-primary-text min-h-screen flex items-center justify-center p-6">
       <div className="bg-secondary-bg p-10 rounded-lg shadow-lg max-w-md w-full">
@@ -89,6 +104,7 @@ const Register = () => {
             onChange={changeInputHandler}
             className="w-full p-4 rounded-lg bg-background border border-accent text-primary-text focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
             autoFocus
+            required
           />
           <input
             type="email"
@@ -97,6 +113,7 @@ const Register = () => {
             value={userData.email}
             onChange={changeInputHandler}
             className="w-full p-4 rounded-lg bg-background border border-accent text-primary-text focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
+            required
           />
           <input
             type="password"
@@ -105,6 +122,7 @@ const Register = () => {
             value={userData.password}
             onChange={changeInputHandler}
             className="w-full p-4 rounded-lg bg-background border border-accent text-primary-text focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
+            required
           />
           <input
             type="password"
@@ -113,15 +131,42 @@ const Register = () => {
             value={userData.password2}
             onChange={changeInputHandler}
             className="w-full p-4 rounded-lg bg-background border border-accent text-primary-text focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
+            required
           />
           <button
             type="submit"
-            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold w-full ${
+            className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold w-full flex justify-center items-center ${
               isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isLoading}
           >
-            Register
+            {isLoading ? (
+              <div className="flex items-center">
+                <svg
+                  className="w-5 h-5 mr-2 text-white animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+                Registering...
+              </div>
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
         <small className="block text-center mt-6 text-sm">

@@ -1,37 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // For navigation
-import toast from "react-hot-toast"; // For error notifications
-import axios from "axios"; // For making HTTP requests
-import Loader from "../components/Loader"; // Loading spinner component
+import React, { useEffect, useState, useCallback } from "react";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import axios from "axios";
+import Loader from "../components/Loader";
 
 const Authors = () => {
-  const [authors, setAuthors] = useState([]); // State to store authors
-  const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const [authors, setAuthors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null); // Add error state
+
+  const getAuthors = useCallback(async () => {
+    setIsLoading(true);
+    setError(null); // Reset error before new request
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL || "http://localhost:4000"}/users/`
+      );
+      setAuthors(response.data);
+    } catch (err) {
+      setError("Failed to load authors. Please try again later.");
+      toast.error(err.message || "Error fetching authors");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const getAuthors = async () => {
-      setIsLoading(true); // Start loading
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/users/` // Fetch authors from API
-        );
-        setAuthors(response.data); // Store authors in state
-      } catch (err) {
-        toast.error(err.message); // Show error notification
-      }
-      setIsLoading(false); // Stop loading
-    };
     getAuthors();
-  }, []); // Fetch authors only once when the component mounts
+  }, [getAuthors]);
 
   if (isLoading) {
-    return <Loader />; // Show loading spinner if data is being fetched
+    return <Loader />;
   }
 
   return (
     <section className="bg-background text-primary-text py-8 w-full">
       <div className="container mx-auto px-4">
-        {authors.length > 0 ? (
+        {error ? (
+          <div className="text-center">
+            <h2 className="text-2xl text-red-500">{error}</h2>
+          </div>
+        ) : authors.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {authors.map(({ _id: id, avatar, name, posts }) => (
               <Link
@@ -41,7 +50,7 @@ const Authors = () => {
               >
                 <img
                   src={avatar}
-                  alt={`Image of ${name}`}
+                  alt={`Avatar of ${name}`}
                   className="w-16 h-16 rounded-full border-2 border-accent object-cover"
                 />
                 <div>
@@ -53,7 +62,7 @@ const Authors = () => {
           </div>
         ) : (
           <div className="text-center">
-            <h2 className="text-2xl text-primary-text">No Authors</h2>
+            <h2 className="text-2xl text-primary-text">No Authors Found</h2>
           </div>
         )}
       </div>

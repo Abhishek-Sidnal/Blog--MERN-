@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import toast from "react-hot-toast";
 import axios from "axios";
-import Loader from "../components/Loader";
 
 const EditPost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Uncategorized");
   const [description, setDescription] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const [thumbnail, setThumbnail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null); // Add error state
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -25,45 +25,50 @@ const EditPost = () => {
     }
   }, [token, navigate]);
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
+  // Memoize the modules and formats to avoid re-creating on each render
+  const modules = useMemo(
+    () => ({
+      toolbar: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+        ["link", "image"],
+        ["clean"],
       ],
-      ["link", "image"],
-      ["clean"],
+    }),
+    []
+  );
+
+  const formats = useMemo(
+    () => [
+      "header",
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "blockquote",
+      "list",
+      "bullet",
+      "indent",
+      "link",
+      "image",
     ],
-  };
+    []
+  );
 
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-  ];
-
-  const POST_CATEGORIES = [
-    "Agriculture",
-    "Business",
-    "Education",
-    "Entertainment",
-    "Art",
-    "Investment",
-    "Uncategorized",
-    "Weather",
-  ];
+  const POST_CATEGORIES = useMemo(
+    () => [
+      "Agriculture",
+      "Business",
+      "Education",
+      "Entertainment",
+      "Art",
+      "Investment",
+      "Uncategorized",
+      "Weather",
+    ],
+    []
+  );
 
   useEffect(() => {
     const getPost = async () => {
@@ -76,6 +81,7 @@ const EditPost = () => {
         setCategory(response.data.category);
         setDescription(response.data.description);
       } catch (err) {
+        setError("Failed to fetch the post.");
         toast.error("Failed to fetch the post.");
       } finally {
         setIsLoading(false); // End loading
@@ -96,7 +102,9 @@ const EditPost = () => {
     postData.set("title", title);
     postData.set("category", category);
     postData.set("description", description);
-    postData.set("thumbnail", thumbnail);
+    if (thumbnail) {
+      postData.set("thumbnail", thumbnail);
+    }
 
     try {
       const response = await axios.patch(
@@ -109,7 +117,7 @@ const EditPost = () => {
       );
       if (response.status === 200) {
         toast.success(`${title} updated successfully.`);
-        navigate("/");
+        navigate("/"); // Redirect to home page after successful update
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update the post.");
@@ -118,14 +126,17 @@ const EditPost = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loader />; // Show loader during loading state
-  }
-
   return (
     <section className="w-full max-w-3xl mx-auto my-6 px-4 sm:px-6 lg:px-8 bg-background text-primary-text">
       <div className="flex flex-col gap-6">
         <h2 className="text-2xl font-bold text-accent">Edit Post</h2>
+
+        {error && (
+          <div className="text-red-500 mb-4">
+            {error}
+          </div>
+        )}
+
         <form
           className="flex flex-col gap-6"
           onSubmit={editPost}
@@ -137,7 +148,7 @@ const EditPost = () => {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            autoFocus
+            required
           />
           <select
             className="px-4 py-2 border border-secondary-text rounded-lg bg-secondary-text text-background focus:outline-none focus:ring-2 focus:ring-accent transition duration-300"
@@ -168,7 +179,33 @@ const EditPost = () => {
             type="submit"
             disabled={isLoading} // Disable button during loading
           >
-            Update Post
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <svg
+                  className="w-5 h-5 mr-2 text-white animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+                Updating...
+              </div>
+            ) : (
+              "Update Post"
+            )}
           </button>
         </form>
       </div>

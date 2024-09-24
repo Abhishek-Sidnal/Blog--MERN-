@@ -2,6 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PostAuthor from "./PostAuthor";
 
+// Helper function to sanitize and remove extra space
+const sanitizeHTML = (html) => {
+  return html
+    .replace(/<p>/g, '<span style="display:inline;">')
+    .replace(/<\/p>/g, "</span>")
+    .replace(/<h[1-6]>/g, '<span style="display:inline; font-weight:bold;">')
+    .replace(/<\/h[1-6]>/g, "</span>");
+};
+
+// Truncate text with a default length
+const truncateText = (text, maxLength) => {
+  return text.length > maxLength ? text.substr(0, maxLength) + "..." : text;
+};
+
 const PostItem = ({
   postID,
   thumbnail,
@@ -11,23 +25,15 @@ const PostItem = ({
   authorID,
   createdAt,
 }) => {
-  const shortDesc =
-    description.length > 145 ? description.substr(0, 145) + "..." : description;
-  const postTitle = title.length > 30 ? title.substr(0, 30) + "..." : title;
-  const removeExtraSpaceBetweenTags = (html) => {
-    return html
-      .replace(/<p>/g, '<span style="display:inline;">') // Convert <p> to inline
-      .replace(/<\/p>/g, "</span>") // Close <span>
-      .replace(/<h[1-6]>/g, '<span style="display:inline; font-weight:bold;">') // Convert <h1>-<h6> to inline with bold
-      .replace(/<\/h[1-6]>/g, "</span>"); // Close <span>
-  };
+  const shortDesc = truncateText(description, 145);
+  const postTitle = truncateText(title, 30);
 
   return (
     <article className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col">
       <Link to={`/posts/${postID}`}>
         <img
           src={thumbnail}
-          alt={title}
+          alt={`Thumbnail of ${postTitle}`}
           className="w-full h-48 object-cover rounded-t-lg sm:h-64 md:h-48 lg:h-64 xl:h-72"
         />
       </Link>
@@ -41,7 +47,7 @@ const PostItem = ({
         <p
           className="break-words"
           dangerouslySetInnerHTML={{
-            __html: removeExtraSpaceBetweenTags(shortDesc),
+            __html: sanitizeHTML(shortDesc),
           }}
         ></p>
       </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -6,17 +6,17 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './components/Layout';
 import ErrorPage from './pages/ErrorPage';
 import Home from './pages/Home';
-import PostDetail from './pages/PostDetail'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import UserProfile from './pages/UserProfile'
-import Authors from './pages/Authors'
-import CreatePost from './pages/CreatePost'
-import CategoryPosts from './pages/CategoryPosts'
-import AuthorPosts from './pages/AuthorPosts'
-import Dashboard from './pages/Dashboard'
-import EditPost from './pages/EditPost'
-import Logout from './pages/Logout'
+import PostDetail from './pages/PostDetail';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import UserProfile from './pages/UserProfile';
+import Authors from './pages/Authors';
+import CreatePost from './pages/CreatePost';
+import CategoryPosts from './pages/CategoryPosts';
+import AuthorPosts from './pages/AuthorPosts';
+import Dashboard from './pages/Dashboard';
+import EditPost from './pages/EditPost';
+import Logout from './pages/Logout';
 import { Toaster } from 'react-hot-toast';
 import UserProvider from './context/userContext';
 import ForgotPassword from './pages/ForgotPassword';
@@ -24,11 +24,13 @@ import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './components/VerifyEmail';
 import axios from 'axios';
 
+// Configure axios baseURL globally
+axios.defaults.baseURL = 'https://frontend-75cg.onrender.com';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UserProvider> <Layout /></UserProvider>,
+    element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
@@ -46,16 +48,13 @@ const router = createBrowserRouter([
       { path: "myposts/:id", element: <Dashboard /> },
       { path: "posts/:id/edit", element: <EditPost /> },
       { path: "logout", element: <Logout /> },
-    ]
-  }
-])
+    ],
+  },
+]);
 
-const url = `https://frontend-75cg.onrender.com/`;
-const interval = 30000;
-
-//Reloader Function
+// Reloader Function (run every 30 seconds)
 function reloadWebsite() {
-  axios.get(url)
+  axios.get('/')
     .then(response => {
       console.log(`Reloaded at ${new Date().toISOString()}: Status Code ${response.status}`);
     })
@@ -64,13 +63,27 @@ function reloadWebsite() {
     });
 }
 
-setInterval(reloadWebsite, interval);
+// Use `useEffect` to control the interval inside a root component
+function App() {
+  useEffect(() => {
+    const interval = setInterval(reloadWebsite, 30000); // Set interval for reloading every 30 seconds
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster />
+    </>
+  );
+}
+
+// Main render function
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-    <Toaster />
+    <UserProvider>
+      <App />
+    </UserProvider>
   </React.StrictMode>
-
 );

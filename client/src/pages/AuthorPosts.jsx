@@ -1,63 +1,63 @@
-import React, { useEffect, useState } from "react";
-import PostItem from "../components/PostItem"; // Component to display individual posts
-import toast from "react-hot-toast"; // For error notifications
-import axios from "axios"; // For making HTTP requests
-import Loader from "../components/Loader"; // Loading spinner component
-import { useParams } from "react-router-dom"; // To access route parameters
+import React, { useEffect, useState, useCallback } from "react";
+import PostItem from "../components/PostItem";
+import toast from "react-hot-toast";
+import axios from "axios";
+import Loader from "../components/Loader";
+import { useParams } from "react-router-dom";
 
 const AuthorPosts = () => {
-  const [posts, setPosts] = useState([]); // State to store posts
-  const [isLoading, setIsLoading] = useState(false); // State to track loading
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null); // Add error state
+  const { id } = useParams();
 
-  const { id } = useParams(); // Extracting author ID from the route params
+  const fetchPosts = useCallback(async () => {
+    setIsLoading(true);
+    setError(null); // Reset error before new request
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL || "http://localhost:4000"}/posts/users/${id}`
+      );
+      setPosts(response?.data);
+    } catch (error) {
+      setError(error.response?.data?.message || "Something went wrong!");
+      toast.error(error.response?.data?.message || "Error fetching posts");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      setIsLoading(true); // Start loading
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/posts/users/${id}` // Fetch posts by author ID
-        );
-        setPosts(response?.data); // Store posts in state
-      } catch (error) {
-        toast.error(error.response.data.message); // Show error notification
-      }
-      setIsLoading(false); // Stop loading
-    };
     fetchPosts();
-  }, [id]); // Refetch posts when author ID changes
+  }, [fetchPosts]);
 
   if (isLoading) {
-    return <Loader />; // Show loading spinner if fetching posts
+    return <Loader />;
   }
 
   return (
     <section className="bg-background text-primary-text py-8 w-full">
       <div className="container mx-auto px-4">
-        {posts.length > 0 ? (
+        {error ? (
+          <div className="text-center py-8">
+            <h2 className="text-xl sm:text-2xl font-semibold text-red-500">
+              {error}
+            </h2>
+          </div>
+        ) : posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map(
-              ({
-                _id: id,
-                thumbnail,
-                category,
-                title,
-                description,
-                creator,
-                createdAt,
-              }) => (
-                <PostItem
-                  key={id}
-                  postID={id}
-                  thumbnail={thumbnail}
-                  category={category}
-                  title={title}
-                  description={description}
-                  authorID={creator}
-                  createdAt={createdAt}
-                />
-              )
-            )}
+            {posts.map((post) => (
+              <PostItem
+                key={post._id}
+                postID={post._id}
+                thumbnail={post.thumbnail}
+                category={post.category}
+                title={post.title}
+                description={post.description}
+                authorID={post.creator}
+                createdAt={post.createdAt}
+              />
+            ))}
           </div>
         ) : (
           <div className="text-center py-8">

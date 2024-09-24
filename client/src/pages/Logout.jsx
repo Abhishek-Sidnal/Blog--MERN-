@@ -9,15 +9,23 @@ const Logout = () => {
 
   useEffect(() => {
     setCurrentUser(null);
-    toast.success("Logged Out!");
+    toast.success("Logged Out!", {
+      duration: 1500, // Customize toast duration
+    });
 
-    // Delay navigation to allow toast to be seen
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       navigate("/login");
-    }, 1000); // Delay in milliseconds
-  }, []);
+    }, 1500); // Ensure the duration matches toast display time
 
-  return null;
+    // Cleanup function to avoid memory leaks if component unmounts
+    return () => clearTimeout(timeoutId);
+  }, [navigate, setCurrentUser]);
+
+  return (
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-600"></div>
+    </div>
+  );
 };
 
 export default Logout;

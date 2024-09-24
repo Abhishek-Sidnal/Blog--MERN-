@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import Loader from "../components/Loader";
@@ -8,21 +8,21 @@ import DeletePost from "./DeletePost";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
-
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
 
-  // redirect to login page for any user who isn't loogged in
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null); // Error state for better error handling
+
+  // Combined useEffect for authentication and fetching posts
   useEffect(() => {
     if (!token) {
       navigate("/login");
+      return;
     }
-  }, []);
 
-  useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
       try {
@@ -35,15 +35,64 @@ const Dashboard = () => {
         );
         setPosts(response.data);
       } catch (err) {
-        toast.error(err);
+        setError("Failed to load posts. Please try again later.");
+        toast.error(err.response?.data?.message || "An error occurred.");
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
-    fetchPosts();
-  }, [id]);
 
+    fetchPosts();
+  }, [id, token, navigate]); // Add token and navigate to dependencies to handle token changes or navigation
+
+  // Memoize the posts rendering for performance optimization
+  const renderedPosts = useMemo(() => {
+    // If posts is null or undefined, return an empty array for safety
+    return (posts || []).map((post) => {
+      if (!post || !post._id) return null; // Ensure post and _id exist
+
+      return (
+        <article
+          key={post._id}
+          className="bg-secondary-bg p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+        >
+          <div className="mb-4">
+            <img
+              src={post.thumbnail || "/default-thumbnail.jpg"} // Fallback thumbnail
+              alt={post.title || "No Title"}
+              className="w-full h-48 object-cover rounded-lg"
+            />
+          </div>
+          <div className="text-center">
+            <h5 className="text-xl font-semibold mb-2">{post.title || "Untitled"}</h5>
+            <div className="flex justify-center space-x-4">
+              <Link
+                to={`/posts/${post._id}`}
+                className="flex items-center justify-center px-4 py-1 text-base text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 rounded-lg shadow-md transition"
+              >
+                View
+              </Link>
+              <Link
+                to={`/posts/${post._id}/edit`}
+                className="flex items-center justify-center px-4 py-1 text-base text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg shadow-md transition"
+              >
+                Edit
+              </Link>
+              <DeletePost postId={post._id} />
+            </div>
+          </div>
+        </article>
+      );
+    });
+  }, [posts]);
+
+  // Render loading state
   if (isLoading) {
-    return <Loader />;
+    return (
+      <section className="min-h-screen flex items-center justify-center">
+        <Loader />
+      </section>
+    );
   }
 
   return (
@@ -53,47 +102,24 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-accent">My Dashboard</h1>
         </header>
 
-        {posts.length ? (
+        {error ? (
+          <div className="text-center">
+            <h2 className="text-xl text-red-500">{error}</h2>
+          </div>
+        ) : posts && posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-            {posts.map((post) => (
-              <article
-                key={post._id}
-                className="bg-secondary-bg p-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="mb-4">
-                  <img
-                    src={post.thumbnail}
-                    alt={post.title}
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                </div>
-                <div className="text-center">
-                  <h5 className="text-xl font-semibold mb-2">{post.title}</h5>
-                  <div className="flex justify-center space-x-4">
-                    <Link
-                      to={`/posts/${post._id}`}
-                      className="flex items-center justify-center px-4 py-1 text-base text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 rounded-lg shadow-md transition"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      to={`/posts/${post._id}/edit`}
-                      className="flex items-center justify-center px-4 py-1 text-base text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg shadow-md transition"
-                    >
-                      Edit
-                    </Link>
-                    <DeletePost postId={post._id} />
-                  </div>
-                </div>
-              </article>
-            ))}
+            {renderedPosts}
           </div>
         ) : (
           <div className="text-center mt-16">
             <h2 className="text-2xl font-semibold">You have no posts yet</h2>
-            <p className="text-accent mt-4">
-              Start creating new posts to see them here.
-            </p>
+            <p className="text-accent mt-4">Start creating new posts to see them here.</p>
+            <Link
+              to="/create-post"
+              className="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg"
+            >
+              Create New Post
+            </Link>
           </div>
         )}
       </div>
