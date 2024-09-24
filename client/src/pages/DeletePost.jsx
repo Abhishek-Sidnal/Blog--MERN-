@@ -10,7 +10,6 @@ const DeletePost = ({ postId, onDelete }) => {
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
 
-  // Memoize the removePost function to avoid re-creation on each render
   const removePost = useCallback(async (postId) => {
     if (!window.confirm("Are you sure you want to delete this post?")) {
       return;
@@ -30,22 +29,19 @@ const DeletePost = ({ postId, onDelete }) => {
       if (response.status === 200) {
         toast.success("Post deleted successfully");
         
-        // Call onDelete callback if provided
         if (onDelete) {
           onDelete(postId);
         }
 
-        // Check if the current page needs to be refreshed or redirected
         if (location.pathname.startsWith(`/myposts`)) {
-          navigate(0); // If needed, refresh the page
+          navigate(0);
         } else {
-          navigate("/"); // Redirect to home
+          navigate("/"); 
         }
       }
     } catch (err) {
       console.error(err);
 
-      // Handle errors with a user-friendly message
       if (err.response?.data?.message) {
         toast.error(err.response.data.message);
       } else {

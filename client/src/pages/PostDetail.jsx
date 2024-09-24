@@ -6,7 +6,6 @@ import { UserContext } from "../context/userContext";
 import PostAuthor from "../components/PostAuthor";
 import Loader from "../components/Loader";
 
-// Lazy load non-essential components
 const DeletePost = React.lazy(() => import("./DeletePost"));
 const ReviewForm = React.lazy(() => import("../components/ReviewForm"));
 const ReviewsList = React.lazy(() => import("../components/ReviewsList"));

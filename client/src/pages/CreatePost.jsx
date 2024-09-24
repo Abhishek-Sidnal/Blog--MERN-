@@ -15,7 +15,7 @@ const POST_CATEGORIES = [
   "Investment",
   "Uncategorized",
   "Weather",
-]; // Define POST_CATEGORIES array here
+]; 
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -115,7 +115,7 @@ const CreatePost = () => {
 
       if (response.status === 201) {
         toast.success(`${title} posted successfully.`);
-        navigate("/"); // Redirect on success
+        navigate("/");
       }
     } catch (err) {
       console.error("Error creating post:", err);

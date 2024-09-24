@@ -12,7 +12,7 @@ const EditPost = () => {
   const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null); // Add error state
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -25,7 +25,6 @@ const EditPost = () => {
     }
   }, [token, navigate]);
 
-  // Memoize the modules and formats to avoid re-creating on each render
   const modules = useMemo(
     () => ({
       toolbar: [
@@ -73,7 +72,7 @@ const EditPost = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
-        setIsLoading(true); // Start loading
+        setIsLoading(true);
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/posts/${id}`
         );
@@ -84,7 +83,7 @@ const EditPost = () => {
         setError("Failed to fetch the post.");
         toast.error("Failed to fetch the post.");
       } finally {
-        setIsLoading(false); // End loading
+        setIsLoading(false);
       }
     };
     getPost();
@@ -93,10 +92,9 @@ const EditPost = () => {
   const editPost = async (e) => {
     e.preventDefault();
 
-    // If the form is already being submitted, return early
     if (isLoading) return;
 
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
 
     const postData = new FormData();
     postData.set("title", title);
@@ -117,12 +115,12 @@ const EditPost = () => {
       );
       if (response.status === 200) {
         toast.success(`${title} updated successfully.`);
-        navigate("/"); // Redirect to home page after successful update
+        navigate("/"); 
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update the post.");
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
 
@@ -177,7 +175,7 @@ const EditPost = () => {
           <button
             className={`px-4 py-2 bg-blue-700 rounded-lg text-white font-semibold self-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             type="submit"
-            disabled={isLoading} // Disable button during loading
+            disabled={isLoading}
           >
             {isLoading ? (
               <div className="flex items-center justify-center">

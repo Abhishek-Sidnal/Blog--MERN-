@@ -10,7 +10,7 @@ const Login = () => {
     password: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false); // Track loading state
+  const [isLoading, setIsLoading] = useState(false); 
   const { setCurrentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ const Login = () => {
       return;
     }
 
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     try {
       const response = await axios.post(
@@ -45,7 +45,7 @@ const Login = () => {
         error.response?.data?.message || "Login failed. Please try again."
       );
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
 

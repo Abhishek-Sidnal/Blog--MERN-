@@ -14,9 +14,8 @@ const Dashboard = () => {
 
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null); // Error state for better error handling
+  const [error, setError] = useState(null);
 
-  // Combined useEffect for authentication and fetching posts
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -43,13 +42,11 @@ const Dashboard = () => {
     };
 
     fetchPosts();
-  }, [id, token, navigate]); // Add token and navigate to dependencies to handle token changes or navigation
+  }, [id, token, navigate]);
 
-  // Memoize the posts rendering for performance optimization
   const renderedPosts = useMemo(() => {
-    // If posts is null or undefined, return an empty array for safety
     return (posts || []).map((post) => {
-      if (!post || !post._id) return null; // Ensure post and _id exist
+      if (!post || !post._id) return null;
 
       return (
         <article
@@ -86,7 +83,6 @@ const Dashboard = () => {
     });
   }, [posts]);
 
-  // Render loading state
   if (isLoading) {
     return (
       <section className="min-h-screen flex items-center justify-center">

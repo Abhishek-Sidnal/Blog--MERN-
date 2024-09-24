@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PostAuthor from "./PostAuthor";
 
-// Helper function to sanitize and remove extra space
 const sanitizeHTML = (html) => {
   return html
     .replace(/<p>/g, '<span style="display:inline;">')
@@ -11,7 +10,6 @@ const sanitizeHTML = (html) => {
     .replace(/<\/h[1-6]>/g, "</span>");
 };
 
-// Truncate text with a default length
 const truncateText = (text, maxLength) => {
   return text.length > maxLength ? text.substr(0, maxLength) + "..." : text;
 };

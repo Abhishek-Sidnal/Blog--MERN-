@@ -10,14 +10,13 @@ const Logout = () => {
   useEffect(() => {
     setCurrentUser(null);
     toast.success("Logged Out!", {
-      duration: 1500, // Customize toast duration
+      duration: 1500, 
     });
 
     const timeoutId = setTimeout(() => {
       navigate("/login");
-    }, 1500); // Ensure the duration matches toast display time
+    }, 1500);
 
-    // Cleanup function to avoid memory leaks if component unmounts
     return () => clearTimeout(timeoutId);
   }, [navigate, setCurrentUser]);
 

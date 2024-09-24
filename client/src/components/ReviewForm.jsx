@@ -36,7 +36,7 @@ const ReviewForm = ({ postId, onReviewAdded }) => {
         return;
       }
 
-      setIsSubmitting(true); // Disable the form while submitting
+      setIsSubmitting(true);
 
       try {
         const response = await axios.post(
@@ -52,11 +52,11 @@ const ReviewForm = ({ postId, onReviewAdded }) => {
         setRating(0);
         setComment("");
         setErrors({});
-        navigate(0); // Refresh the page or reload the current view
+        navigate(0);
       } catch (error) {
         setErrors({ form: "Failed to submit review. Please try again later." });
       } finally {
-        setIsSubmitting(false); // Re-enable the form after submission
+        setIsSubmitting(false);
       }
     },
     [rating, comment, postId, currentUser, onReviewAdded, navigate]
@@ -70,10 +70,8 @@ const ReviewForm = ({ postId, onReviewAdded }) => {
     >
       <h4 className="text-2xl font-semibold text-primary-text mb-4">Leave a Review</h4>
 
-      {/* Display form-level errors */}
       {errors.form && <p className="text-red-500 mb-4">{errors.form}</p>}
 
-      {/* Rating Input */}
       <div className="mb-4">
         <label htmlFor="rating" className="block text-primary-text font-medium mb-2">
           Rating
@@ -114,13 +112,12 @@ const ReviewForm = ({ postId, onReviewAdded }) => {
         {errors.comment && <p className="text-red-500 text-sm mt-1">{errors.comment}</p>}
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         className={`w-full py-2 bg-primary-accent text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-primary-accent transition ${
           isSubmitting ? "opacity-50 cursor-not-allowed" : ""
         }`}
-        disabled={isSubmitting} // Disable button during submission
+        disabled={isSubmitting}
       >
         {isSubmitting ? (
           <div className="flex items-center justify-center">

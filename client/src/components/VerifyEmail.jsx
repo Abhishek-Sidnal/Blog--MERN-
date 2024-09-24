@@ -4,12 +4,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const VerifyEmail = () => {
-  const { token } = useParams(); // Get the token from the URL
+  const { token } = useParams(); 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  // Memoize the email verification function to avoid unnecessary re-creations
   const verifyEmail = useCallback(async () => {
     try {
       const response = await axios.get(
@@ -24,12 +23,11 @@ const VerifyEmail = () => {
     } finally {
       setIsLoading(false);
       setTimeout(() => {
-        navigate("/login"); // Redirect to login page after a delay
-      }, 3000); // Redirect after 3 seconds
+        navigate("/login"); 
+      }, 3000); 
     }
   }, [token, navigate]);
 
-  // Trigger the email verification when the component mounts
   useEffect(() => {
     verifyEmail();
   }, [verifyEmail]);

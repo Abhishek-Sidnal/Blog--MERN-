@@ -4,20 +4,20 @@ import toast from "react-hot-toast";
 import axios from "axios"; 
 import Loader from "../components/Loader"; 
 import { useParams } from "react-router-dom"; 
-import { debounce } from 'lodash'; // You can use lodash debounce for optimizing search
+import { debounce } from 'lodash'; 
 
 const CategoryPosts = () => {
   const [posts, setPosts] = useState([]); 
   const [isLoading, setIsLoading] = useState(false); 
   const [searchQuery, setSearchQuery] = useState("");
-  const [error, setError] = useState(null); // Error state for better error handling
+  const [error, setError] = useState(null); 
 
   const { category } = useParams(); 
 
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true); 
-      setError(null); // Reset error on each fetch
+      setError(null);
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_BASE_URL}/posts/categories/${category}`
@@ -31,15 +31,13 @@ const CategoryPosts = () => {
       setIsLoading(false); 
     };
     fetchPosts();
-  }, [category]); // Fetch posts whenever category changes
+  }, [category]);
 
-  // Debounced search handler to avoid excessive re-renders
   const handleSearch = useMemo(
     () => debounce((e) => setSearchQuery(e.target.value), 300),
     []
   );
 
-  // Filtered posts derived from search query and posts list
   const filteredPosts = useMemo(() => {
     if (!searchQuery) return posts;
     return posts.filter(post => 
@@ -58,7 +56,7 @@ const CategoryPosts = () => {
         <input
           type="text"
           placeholder="Search posts..."
-          onChange={handleSearch} // Use debounced search handler
+          onChange={handleSearch}
           className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg"
         />
         

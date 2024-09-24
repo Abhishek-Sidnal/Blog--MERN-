@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const ResetPassword = () => {
-  const { token } = useParams(); // Get the token from the URL
+  const { token } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     newPassword: "",

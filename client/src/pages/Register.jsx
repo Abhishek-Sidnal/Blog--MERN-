@@ -27,7 +27,6 @@ const Register = () => {
   };
 
   const validatePassword = (password) => {
-    // Ensure password length is at least 6 characters
     return password.length >= 6;
   };
 

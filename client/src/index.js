@@ -52,7 +52,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-// Reloader Function (run every 30 seconds)
 function reloadWebsite() {
   axios.get('/')
     .then(response => {
@@ -63,11 +62,10 @@ function reloadWebsite() {
     });
 }
 
-// Use `useEffect` to control the interval inside a root component
 function App() {
   useEffect(() => {
-    const interval = setInterval(reloadWebsite, 30000); // Set interval for reloading every 30 seconds
-    return () => clearInterval(interval); // Cleanup on unmount
+    const interval = setInterval(reloadWebsite, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -78,7 +76,6 @@ function App() {
   );
 }
 
-// Main render function
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>

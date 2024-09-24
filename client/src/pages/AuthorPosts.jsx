@@ -8,12 +8,12 @@ import { useParams } from "react-router-dom";
 const AuthorPosts = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null); // Add error state
+  const [error, setError] = useState(null);
   const { id } = useParams();
 
   const fetchPosts = useCallback(async () => {
     setIsLoading(true);
-    setError(null); // Reset error before new request
+    setError(null);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_BASE_URL || "http://localhost:4000"}/posts/users/${id}`

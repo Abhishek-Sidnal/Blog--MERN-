@@ -6,7 +6,6 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 import ru from "javascript-time-ago/locale/ru.json";
 
-// Add locale for time ago
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addDefaultLocale(ru);
 
@@ -14,7 +13,6 @@ const PostAuthor = ({ authorID, createdAt }) => {
   const [author, setAuthor] = useState({});
   const [error, setError] = useState(null);
 
-  // Memoize the function to avoid unnecessary re-renders and calls
   const getAuthor = useCallback(async () => {
     try {
       const response = await axios.get(
@@ -33,7 +31,6 @@ const PostAuthor = ({ authorID, createdAt }) => {
     }
   }, [authorID, getAuthor]);
 
-  // Fallback UI if author details fail to load
   if (error) {
     return <div className="text-red-500">{error}</div>;
   }
@@ -47,7 +44,7 @@ const PostAuthor = ({ authorID, createdAt }) => {
         src={author?.avatar}
         alt={author?.name}
         className="w-10 h-10 rounded-full object-cover"
-        loading="lazy" // Lazy-load the avatar image
+        loading="lazy" 
       />
       <div className="text-sm">
         <h5 className="font-semibold text-gray-800">{author?.name}</h5>

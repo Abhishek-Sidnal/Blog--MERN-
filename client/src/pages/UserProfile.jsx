@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/userContext";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Loader from "../components/Loader";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -17,22 +16,20 @@ const UserProfile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [newConfirmPassword, setNewConfirmPassword] = useState("");
   const [isAvatarTouched, setIsAvatarTouched] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // State to track loading
-  const [errors, setErrors] = useState({}); // State for form validation errors
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const { currentUser } = useContext(UserContext);
   const token = currentUser?.token;
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Redirect to login page if the user is not logged in
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
   }, [token, navigate]);
 
-  // Fetch user data
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -54,13 +51,11 @@ const UserProfile = () => {
   const handleAvatarChange = useCallback((event) => {
     const file = event.target.files[0];
     if (file) {
-      setAvatar(file); // Store the file object for upload
+      setAvatar(file);
 
-      // Create a local URL for preview
       const filePreviewURL = URL.createObjectURL(file);
-      setAvatarPreview(filePreviewURL); // Use this for preview in img src
+      setAvatarPreview(filePreviewURL);
 
-      // Cleanup the preview URL to prevent memory leak
       return () => URL.revokeObjectURL(filePreviewURL);
     }
   }, []);
@@ -98,12 +93,12 @@ const UserProfile = () => {
 
   const updateUserDetails = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setIsLoading(false); // Stop loading when validation fails
+      setIsLoading(false);
       return;
     }
 
@@ -124,12 +119,12 @@ const UserProfile = () => {
 
       if (response.status === 200) {
         toast.success("Details updated");
-        navigate("/"); // Redirect to home or user profile
+        navigate("/"); 
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update details.");
     } finally {
-      setIsLoading(false); // Ensure loading stops in all cases
+      setIsLoading(false);
     }
   };
 

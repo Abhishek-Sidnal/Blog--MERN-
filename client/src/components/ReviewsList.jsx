@@ -33,7 +33,6 @@ const ReviewsList = ({ reviews, onDeleteReview }) => {
     <div className="mt-8">
       <h4 className="text-2xl font-semibold text-primary-text mb-4">All Reviews</h4>
 
-      {/* Render reviews or fallback UI */}
       {reviews.length > 0 ? (
         <ul className="space-y-4">{renderedReviews}</ul>
       ) : (
